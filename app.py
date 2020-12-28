@@ -8,5 +8,10 @@ def hello_world():
     return 'Hello World!'
 
 
+@app.route('/', methods=['POST'])
+def processing():
+    return '173a66e7'
+
+
 if __name__ == '__main__':
     app.run()
