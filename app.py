@@ -1,5 +1,6 @@
 from flask import Flask, request
-import json, vk, VKsettings, random
+import json, vk, random
+import VKsettings, vkAPI
 
 app = Flask(__name__)
 
@@ -17,11 +18,8 @@ def processing():
     elif data['type'] == 'confirmation':
         return VKsettings.confirmation_token
     elif data['type'] == 'message_new':
-        session = vk.Session()
-        api = vk.API(session, v=VKsettings.api_ver)
         user_id = data['object']['message']['from_id']
-        api.messages.send(access_token=VKsettings.token, user_id=str(user_id), message='Hi, I\'m new bot!',
-                          random_id=random.getrandbits(64))
+        vkAPI.send_message(user_id=user_id, token=VKsettings.token, message="Hi!")
         return 'ok'
 
 
