@@ -8,7 +8,7 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/', methods=['POST'])
+@app.route('/helperBot/api', methods=['POST'])
 def processing():
     return '173a66e7'
 
