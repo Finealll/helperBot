@@ -1,6 +1,6 @@
 from flask import Flask, request
 import json, vk, random
-import VKsettings, vkAPI
+import VKsettings, vkAPI, keyboard_generator
 
 app = Flask(__name__)
 
@@ -19,7 +19,7 @@ def processing():
         return VKsettings.confirmation_token
     elif data['type'] == 'message_new':
         user_id = data['object']['message']['from_id']
-        vkAPI.send_message(user_id=user_id, token=VKsettings.token, message="Hi!")
+        vkAPI.send_message(user_id=user_id, token=VKsettings.token, keyboard=keyboard_generator.get_main_keyboard(), message="Hi!")
         return 'ok'
 
 

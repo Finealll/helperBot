@@ -18,21 +18,24 @@ cur.execute('''CREATE TABLE IF NOT EXISTS users(
 
 # tasks
 cur.execute('''CREATE TABLE IF NOT EXISTS mathematics(
-    num_of_task INTEGER PRIMARY KEY,
+    num_of_task INTEGER,
+    type_of_task INTEGER,
     user_id TEXT,
     status TEXT,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );''')
 
 cur.execute('''CREATE TABLE IF NOT EXISTS physics(
-    num_of_task INTEGER PRIMARY KEY,
+    num_of_task INTEGER,
+    type_of_task INTEGER,
     user_id TEXT,
     status TEXT,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );''')
 
 cur.execute('''CREATE TABLE IF NOT EXISTS progers(
-    num_of_task INTEGER PRIMARY KEY,
+    num_of_task INTEGER,
+    type_of_task INTEGER,
     user_id TEXT,
     status TEXT,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
