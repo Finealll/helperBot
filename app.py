@@ -28,7 +28,7 @@ def processing():
 
 
 @app.route('/helperBot/api/', methods=['GET'])
-def processing():
+def processing1():
     app.logger.info("We have GET request")
     return 'ok'
 
