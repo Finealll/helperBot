@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import payloads
 import json
 
 BLUE = 'primary'
@@ -150,17 +150,11 @@ class KeyBoard:
 
 def get_main_keyboard():
     buttons = []
-    buttons.append(Button.text(label='Взять задание', payload={"type": "open_keyboard", "name": "my_roles"}))
+    buttons.append(Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
+    buttons.append(Button.text(label='Мои задания', payload=payloads.payloads['get_now_tasks_list']))
+    buttons.append(Button.text(label='Роли', payload=payloads.payloads['get_roles_list']))
     generator = KeyBoard(False, False, True)
-    keyboard = generator.load(buttons)
+    generator.load(buttons)
     kb = generator.get()
     return kb
 
-
-def get_roles_keyboard():
-    buttons = []
-    buttons.append(Button.text(label='Вернуться на main', payload={"type": "open_keyboard", "name": "main"}))
-    generator = KeyBoard(False, False, True)
-    keyboard = generator.load(buttons)
-    kb = generator.get()
-    return kb

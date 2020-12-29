@@ -97,4 +97,13 @@ payloads = {
         "subject": "",
         "number": "",
     },
+    #Отправка сообщений с данными
+    "get_now_tasks_list": {  # Открытие своих задач
+        "type": "send_info_message",
+        "name": "get_now_tasks_list"
+    },
+    "get_roles_list": {  # Открытие ролей
+        "type": "send_info_message",
+        "name": "get_roles_list"
+    },
 }
