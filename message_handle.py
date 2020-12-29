@@ -26,11 +26,11 @@ def message_handler(data, token):
             if payload['name'] == 'get_tasks_list':
                 vkAPI.send_message(user_id, token, "Переход к предметам")
 
-            elif payload['type'] == 'send_info_message':
-                if payload['name'] == 'get_roles_list':
-                    vkAPI.send_message(user_id, token, "Переход к ролям")
-                elif payload['name'] == 'get_now_tasks_list':
-                    vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
+        elif payload['type'] == 'send_info_message':
+            if payload['name'] == 'get_roles_list':
+                vkAPI.send_message(user_id, token, "Переход к ролям")
+            elif payload['name'] == 'get_now_tasks_list':
+                vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
 
 
 
