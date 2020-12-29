@@ -7,14 +7,14 @@ def message_handler(data, token):
 
 
 def event_handler(data, token):
-    if 'type' not in data['payload'].keys():
+    if 'type' not in data['object']['payload'].keys():
         return 0
-    payload = json.loads(data['payload'])
+    payload = json.loads(data['object']['payload'])
     if payload['type'] == 'open_keyboard':
         if payload['name'] == 'main':
             keyboard = keyboard_generator.get_main_keyboard()
-            vkAPI.send_message(user_id=data['user_id'], token=token, message='Выбери действие:', keyboard=keyboard)
+            vkAPI.send_message(user_id=data['object']['user_id'], token=token, message='Выбери действие:', keyboard=keyboard)
         elif payload['name'] == 'my_roles':
             keyboard = keyboard_generator.get_roles_keyboard()
-            vkAPI.send_message(user_id=data['user_id'],token=token, message='Выбери предмет', keyboard=keyboard)
+            vkAPI.send_message(user_id=data['object']['user_id'], token=token, message='Выбери предмет', keyboard=keyboard)
     return 1
