@@ -3,17 +3,6 @@ import json
 
 def message_handler(data, token):
     user_id = data['object']['message']['from_id']
-    if 'type' in data['object']['payload'].keys():
-        if data['object']['payload']['type'] == 'open_keyboard':
-            if data['object']['payload']['name'] == 'main':
-                keyboard = keyboard_generator.get_main_keyboard()
-                vkAPI.send_message(user_id=user_id, token=token, message='Выбери действие:',
-                                   keyboard=keyboard)
-            elif data['object']['payload']['name'] == 'my_roles':
-                keyboard = keyboard_generator.get_roles_keyboard()
-                vkAPI.send_message(user_id=user_id, token=token, message='Выбери предмет',
-                                   keyboard=keyboard)
-        return 1
     vkAPI.send_message(user_id=user_id, token=token, message="Просто ответ!", keyboard=keyboard_generator.get_main_keyboard())
 
 
