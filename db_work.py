@@ -1,8 +1,8 @@
-import sqlite3
+import sqlite3, db_settings
 
-
-conn = sqlite3.connect('Databases/MainDB.sqlite3')
+conn = sqlite3.connect(db_settings.patch)
 cur = conn.cursor()
+
 
 # add users
 def add_user(user_id: str, first_name: str, last_name: str):

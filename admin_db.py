@@ -1,6 +1,6 @@
-import sqlite3
+import sqlite3, db_settings
 
-conn = sqlite3.connect('Databases/MainDB.sqlite3')
+conn = sqlite3.connect(db_settings.patch)
 cur = conn.cursor()
 
 #admin_functions
