@@ -27,6 +27,10 @@ def processing():
     return 'ok'
 
 
+@app.route('/helperBot/api/', methods=['GET'])
+def processing():
+    app.logger.info("We have GET request")
+    return 'ok'
 
 
 if __name__ == '__main__':
