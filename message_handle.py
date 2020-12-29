@@ -17,7 +17,7 @@ def message_handler(data, token):
     elif data['object']['message']['text'] == 'admin_get_users!':
         users = admin_db.GetUsers()
         for user in users:
-            vkAPI.send_message(user_id, token, message=user[1]+" "+user[2])
+            vkAPI.send_message(user_id, token, message=user[0]+" "+user[1]+" "+user[2])
 
 
     vkAPI.send_message(user_id=user_id, token=token, message=str(names[0]+" "+names[1]), keyboard=keyboard_generator.get_main_keyboard())
