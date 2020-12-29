@@ -13,6 +13,7 @@ def hello_world():
 @app.route('/helperBot/api/', methods=['POST'])
 def processing():
     data = json.loads(request.data)
+    app.logger.info('Nicw!')
     if 'type' not in data.keys():
         return 'not vk'
     elif data['type'] == 'confirmation':
