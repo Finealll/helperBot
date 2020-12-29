@@ -150,11 +150,17 @@ class KeyBoard:
 
 def get_main_keyboard():
     buttons = []
-    buttons.append(Button.callback(label='Взять задание'))
+    buttons.append(Button.callback(label='Взять задание', payload={"type": "open_keyboard", "name": "my_roles"}))
     generator = KeyBoard(False, False, True)
     keyboard = generator.load(buttons)
-    print(keyboard)
     kb = generator.get()
     return kb
 
-get_main_keyboard()
+
+def get_roles_keyboard():
+    buttons = []
+    buttons.append(Button.callback(label='Вернуться на main', payload={"type": "open_keyboard", "name": "main"}))
+    generator = KeyBoard(False, False, True)
+    keyboard = generator.load(buttons)
+    kb = generator.get()
+    return kb
