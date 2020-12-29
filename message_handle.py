@@ -20,15 +20,16 @@ def message_handler(data, token):
         vkAPI.send_message(user_id, token, "Привет!", keyboard=keyboard_generator.get_main_keyboard())
 
     # open keyboards
-    if 'type' in data['object']['message']['payload']:
-        payload = data['object']['message']['payload']
-        if payload['type'] == 'open_keyboard':
-            if payload['name'] == 'get_tasks_list':
-                vkAPI.send_message(user_id, token, "Переход к предметам")
-            elif payload['name'] == 'get_roles_list':
-                vkAPI.send_message(user_id, token, "Переход к ролям")
-            elif payload['name'] == 'get_now_tasks_list':
-                vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
+    if 'payload' in data['object']['message'].keys():
+        if 'type' in data['object']['message']['payload'].keys():
+            payload = data['object']['message']['payload']
+            if payload['type'] == 'open_keyboard':
+                if payload['name'] == 'get_tasks_list':
+                    vkAPI.send_message(user_id, token, "Переход к предметам")
+                elif payload['name'] == 'get_roles_list':
+                    vkAPI.send_message(user_id, token, "Переход к ролям")
+                elif payload['name'] == 'get_now_tasks_list':
+                    vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
 
 
 
