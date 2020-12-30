@@ -69,7 +69,7 @@ def message_handler(data, token):
             elif payload['type'] == 'send_info_message':
                 # Отправка сообщения с текущими заданиями
                 if payload['name'] == 'get_now_tasks_list':
-                    vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
+                    bot_methods.get_now_tasks(user_id, token)
 
             # change user data
             elif payload['type'] == 'change_info':

@@ -90,3 +90,24 @@ def add_task(user_id, token, payload):
         vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_free_numbers_keyboard(payload['subject'],
                                                                                                  free_numbers,
                                                                                                  payload['type_task']))
+
+def get_type_question(type:int):
+    if type == 1:
+        return 'оценка знаний'
+    if type == 2:
+        return 'оценка умений'
+    if type == 3:
+        return 'задача'
+
+
+def get_now_tasks(user_id, token):
+    for i in range(len(names.table_name)):
+        arr = db_work.get_now_tasks(names.table_name[i], user_id)
+        for item in arr:
+            message = f'{names.name_of_subject[i]}. {str(get_type_question(item[1])).capitalize()}. Номер {item[0]}'
+            keyboard = keyboards.get_now_task_keyboard(names.table_name[i], item[0], item[1])
+            vkAPI.send_message(user_id, token, message, keyboard=keyboard)
+
+
+
+

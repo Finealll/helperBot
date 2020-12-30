@@ -97,6 +97,24 @@ def get_free_numbers_keyboard(subject, free_numbers, type):
     return kb
 
 
+def get_now_task_keyboard(subject, num, type):
+    buttons = []
+    payload = payloads.payloads['push_task']
+    payload['subject'] = subject
+    payload['number'] = num
+    payload['type_task'] = type
+    buttons.append(kg.Button.text(label='Отправить', payload=payload, color='positive'))
+    payload = payloads.payloads['delete_task']
+    payload['subject'] = subject
+    payload['number'] = num
+    payload['type_task'] = type
+    buttons.append(kg.Button.text(label='Отказаться', payload=payload, color='negative'))
+    generator = kg.KeyBoard(inline=True, one_line=True)
+    generator.load(buttons)
+    kb = generator.get()
+    return kb
+
+
 
 
 
