@@ -47,4 +47,9 @@ def get_free_numbers(table: str):
     cur.execute(f'''SELECT num_of_task FROM {table} WHERE status IS ?;''', ('not complete',))
     return cur.fetchall()
 
+def get_roles_in_roles(user_id: str):
+    cur.execute('''SELECT role FROM roles WHERE user_id=?;''', (user_id,))
+    return cur.fetchone()
 
+
+print(get_roles_in_roles('2096405391'))

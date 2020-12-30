@@ -102,8 +102,16 @@ payloads = {
         "type": "send_info_message",
         "name": "get_now_tasks_list"
     },
-    "get_roles_list": {  # Открытие ролей
+    # Открытие ролей
+    "get_roles_list": {
         "type": "send_info_message",
         "name": "get_roles_list"
+    },
+    #Роль
+    "change_role": {
+        "type": "change_info",
+        "name": "change_role",
+        "role": "",
+        "do": ""
     },
 }

@@ -1,4 +1,4 @@
-import vkAPI, keyboard_generator, db_work, admin_db
+import vkAPI, keyboards, admin_db, db_work
 import json
 
 def message_handler(data, token):
@@ -18,17 +18,30 @@ def message_handler(data, token):
             vkAPI.send_message(user_id, token, message=user[0]+" "+user[1]+" "+user[2])
     # Main
     if data['object']['message']['text'] == 'На главную':
-        vkAPI.send_message(user_id, token, "Привет!", keyboard=keyboard_generator.get_main_keyboard())
+        vkAPI.send_message(user_id, token, "Привет!", keyboard=keyboards.get_main_keyboard())
 
-    # open keyboards
+    # Обработка кнопок с кастомными payloadами
     if 'type' in payload.keys():
+        # open keyboards
         if payload['type'] == 'open_keyboard':
             if payload['name'] == 'get_tasks_list':
                 vkAPI.send_message(user_id, token, "Переход к предметам")
 
+        # send info message
         elif payload['type'] == 'send_info_message':
+            #Отправка сообщения с ролями
             if payload['name'] == 'get_roles_list':
-                vkAPI.send_message(user_id, token, "Переход к ролям")
+                roles = db_work.get_roles_in_roles(user_id)
+                if roles is None:
+                    message = "У вас пока что нет ролей!\nДобавьте же их!"
+                else:
+                    message = "Ваши текущие роли:"
+                    for role in roles:
+                        message += "\n"+str(role)
+                vkAPI.send_message(user_id, token, message, keyboards.get_roles_keyboard(roles))
+
+
+            #Отправка сообщения с текущими заданиями
             elif payload['name'] == 'get_now_tasks_list':
                 vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
 
