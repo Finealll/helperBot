@@ -67,8 +67,8 @@ def get_subject_types(user_id, token, payload):
     vkAPI.send_message(user_id, token, "Выберите тип заданий", keyboard=keyboard)
 
 
-def get_free_progers_numbers_1(user_id, token):
-    free_numbers = db_work.get_free_numbers(names.table_name[0], 1)
+def get_free_progers_numbers(user_id, token, table_name, type):
+    free_numbers = db_work.get_free_numbers(table_name, type)
     keyboard = keyboards.get_free_numbers_keyboard(names.name_of_subject[0], free_numbers, 1)
     vkAPI.send_message(user_id, token, "Выберите задания", keyboard=keyboard)
 
