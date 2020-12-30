@@ -36,11 +36,11 @@ def get_subject_types(user_id, token, payload):
     type2 = None
     type3 = None
     if db_work.check_free_numbers_by_status_and_type(payload['table_name'], 1):
-        type1 = payload['subtype1']
+        type1 = payload['subtype_1']
     if db_work.check_free_numbers_by_status_and_type(payload['table_name'], 2):
-        type1 = payload['subtype2']
+        type1 = payload['subtype_2']
     if db_work.check_free_numbers_by_status_and_type(payload['table_name'], 3):
-        type1 = payload['subtype3']
+        type1 = payload['subtype_3']
     keyboard = keyboards.get_subjects_types_keyboard(type1, type2, type3)
     vkAPI.send_message(user_id, token, "Выберите тип заданий", keyboard=keyboard)
 
