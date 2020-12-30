@@ -29,19 +29,17 @@ def message_handler(data, token):
         if 'type' in payload.keys():
             # open keyboards
             if payload['type'] == 'open_keyboard':
+                # Переход к предметам по ролям
                 if payload['name'] == 'get_tasks_list':
                     vkAPI.send_message(user_id, token, "Переход к предметам")
-                #Отправка сообщения с ролями
+                # Отправка сообщения с ролями
                 elif payload['name'] == 'get_roles_list':
-                    buff = db_work.get_roles_in_roles(user_id)
-                    roles = []
-                    for item in buff:
-                        roles.append(item[0])
+                    roles = db_work.get_roles_in_roles(user_id)
                     vkAPI.send_message(user_id, token, 'Роли:', keyboard=keyboards.get_roles_keyboard(roles))
 
             # send info message
             elif payload['type'] == 'send_info_message':
-                #Отправка сообщения с текущими заданиями
+                # Отправка сообщения с текущими заданиями
                 if payload['name'] == 'get_now_tasks_list':
                     vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
 
@@ -49,7 +47,7 @@ def message_handler(data, token):
             elif payload['type'] == 'change_info':
                 # Изменение ролей
                 if payload['name'] == 'change_role':
-                    availability = db_work.check_roles_in_roles(user_id,payload['role'])
+                    availability = db_work.check_roles_in_roles(user_id, payload['role'])
                     if payload['do'] == 'add':
                         if availability:
                             message = "У вас уже есть эта роль!"
@@ -62,10 +60,7 @@ def message_handler(data, token):
                         elif availability:
                             db_work.del_role(user_id, payload['role'])
                             message = "Роль " + payload['role'] + " удалена"
-                    buff = db_work.get_roles_in_roles(user_id)
-                    roles = []
-                    for item in buff:
-                        roles.append(item[0])
+                    roles = db_work.get_roles_in_roles(user_id)
                     vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_roles_keyboard(roles))
 
 

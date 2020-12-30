@@ -49,7 +49,11 @@ def get_free_numbers(table: str):
 
 def get_roles_in_roles(user_id: str):
     cur.execute('''SELECT role FROM roles WHERE user_id=?;''', (user_id,))
-    return cur.fetchall()
+    buff = cur.fetchall()
+    roles = []
+    for item in buff:
+        roles.append(item[0])
+    return roles
 
 
 #buff = get_roles_in_roles('209640539')
