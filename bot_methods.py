@@ -56,7 +56,7 @@ def get_subject_types(user_id, token, payload):
             type2 = 'get_physics_type2'
         if db_work.check_free_numbers_by_status_and_type('physics', 3):
             type3 = 'get_physics_type3'
-    elif payload['name'] == 'get_eltech_types':
+    elif payload['name'] == 'get_math_types':
         if db_work.check_free_numbers_by_status_and_type('maths', 1):
             type1 = 'get_math_type1'
         if db_work.check_free_numbers_by_status_and_type('maths', 2):

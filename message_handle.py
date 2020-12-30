@@ -27,6 +27,15 @@ def message_handler(data, token):
                 # Переход к предметам по ролям
                 elif payload['name'] == 'get_tasks_list':
                     bot_methods.get_task_list(user_id, token)
+                # Переход к типам предметов
+                elif payload['name' == 'get_progers_types']:
+                    bot_methods.get_subject_types(user_id, token, payload)
+                elif payload['name' == 'get_eltech_types']:
+                    bot_methods.get_subject_types(user_id, token, payload)
+                elif payload['name' == 'get_physics_types']:
+                    bot_methods.get_subject_types(user_id, token, payload)
+                elif payload['name' == 'get_math_types']:
+                    bot_methods.get_subject_types(user_id, token, payload)
                 # Переход к выбору ролей
                 elif payload['name'] == 'get_roles_list':
                     bot_methods.get_roles_list(user_id, token)
