@@ -80,13 +80,13 @@ def get_free_numbers_keyboard(subject, free_numbers, type):
     buttons.append([])
     buttons[0].append(kg.Button.text(label='Показать задания', payload=payload))
     j = 0
-    for i in range(0, 3):
+    for i in range(0, len(free_numbers)):
         if int(i / 10) == j:
             buttons.append([])
             j += 1
         payload = dict(payloads.payloads['add_task'])
         payload['subject'] = subject
-        payload['number'] = i+1
+        payload['number'] = free_numbers[i]
         payload['type_task'] = type
         buttons[j].append(kg.Button.text(str(i), payload=payload))
     buttons.append([])
