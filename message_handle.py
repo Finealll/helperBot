@@ -36,14 +36,16 @@ def message_handler(data, token):
             elif payload['type'] == 'send_info_message':
                 #Отправка сообщения с ролями
                 if payload['name'] == 'get_roles_list':
-                    roles = db_work.get_roles_in_roles(user_id)
-                    print(roles)
+                    buff = db_work.get_roles_in_roles(user_id)
+                    roles = []
+                    for item in buff:
+                        roles.append(item[0])
                     if roles is None:
                         message = "У вас пока что нет ролей!\nДобавьте же их!"
                     else:
                         message = "Ваши текущие роли:"
                         for role in roles:
-                            message += "\n"+str(role[0])
+                            message += "\n"+str(role)
                     vkAPI.send_message(user_id, token, message, keyboards.get_roles_keyboard(roles))
 
 
