@@ -15,15 +15,21 @@ def get_main_keyboard():
 #Inline клава для сообщения с ролями
 def get_roles_keyboard(roles_now):
     buttons = []
-    for role in roles.roles:
+    if roles.roles[4] in roles_now:
         payload = dict(payloads.payloads['change_role'])
-        payload['role'] = role
-        if role in roles_now:
-            payload['do'] = 'delete'
-            buttons.append(kg.Button.text(label='Удалить роль \"'+role+'\"', payload=payload, color='negative'))
-        else:
-            payload['do'] = 'add'
-            buttons.append(kg.Button.text(label='Добавить роль \"'+role+'\"', payload=payload, color='positive'))
+        payload['role'] = roles.roles[4]
+        payload['do'] = 'delete'
+        buttons.append(kg.Button.text(label='Удалить роль \"'+roles.roles[4]+'\"', payload=payload, color='negative'))
+    else:
+        for role in roles.roles:
+            payload = dict(payloads.payloads['change_role'])
+            payload['role'] = role
+            if role in roles_now:
+                payload['do'] = 'delete'
+                buttons.append(kg.Button.text(label='Удалить роль \"'+role+'\"', payload=payload, color='negative'))
+            else:
+                payload['do'] = 'add'
+                buttons.append(kg.Button.text(label='Добавить роль \"'+role+'\"', payload=payload, color='positive'))
     buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
     generator = kg.KeyBoard()
     generator.load(buttons)
