@@ -53,9 +53,13 @@ def check_free_numbers_by_status_and_type(table: str, type: int):
 
 # Getters
 
-def get_free_numbers(table: str):
-    cur.execute(f'''SELECT num_of_task FROM {table} WHERE status IS ?;''', ('not complete',))
-    return cur.fetchall()
+def get_free_numbers(table: str, type: int):
+    cur.execute(f'''SELECT num_of_task FROM {table} WHERE status IS ? AND type_of_task IS ?;''', ('not complete', type))
+    buff = cur.fetchall()
+    free_numbers = []
+    for item in buff:
+        free_numbers.append(item[0])
+    return free_numbers
 
 
 def get_roles_in_roles(user_id: str):

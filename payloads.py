@@ -86,6 +86,7 @@ payloads = {
         "type": "add_task",
         "subject": "",
         "number": "",
+        "type_task": 0,
     },
     #Удаление задания
     "delete_task": {
@@ -117,4 +118,10 @@ payloads = {
         "role": "",
         "do": ""
     },
+    # Отправка документа с заданием
+    "get_tasks": {
+        "type": "get_doc",
+        "name": "get_tasks",
+        "subject": "",
+    }
 }
