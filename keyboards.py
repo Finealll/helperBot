@@ -15,7 +15,7 @@ def get_main_keyboard():
 #Inline клава для сообщения с ролями
 def get_roles_keyboard(roles_now):
     buttons = []
-    for role in roles:
+    for role in roles.roles:
         payload = payloads.payloads['change_role']
         payload['role'] = role
         if role in roles_now:
