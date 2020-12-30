@@ -17,6 +17,7 @@ payloads = {
     "get_progers_types": {  #Открытие типов задач программирования
         "type": "open_keyboard",
         "name": "get_progers_types",
+        "table_name": "progers",
         "subtype_1": "get_progers_type1",
         "subtype_2": "get_progers_type2",
         "subtype_3": "get_progers_type3",
@@ -37,6 +38,7 @@ payloads = {
     "get_eltech_types": {  #Открытие типов задач программирования
         "type": "open_keyboard",
         "name": "get_eltech_types",
+        "table_name": "eltech",
         "subtype_1": "get_eltech_type1",
         "subtype_2": "get_eltech_type2",
         "subtype_3": "get_eltech_type3",
@@ -57,6 +59,7 @@ payloads = {
     "get_physics_types": {  #Открытие типов задач программирования
         "type": "open_keyboard",
         "name": "get_physics_types",
+        "table_name": "physics",
         "subtype_1": "get_physics_type1",
         "subtype_2": "get_physics_type2",
         "subtype_3": "get_physics_type3",
@@ -77,6 +80,7 @@ payloads = {
     "get_math_types": {  #Открытие типов задач программирования
         "type": "open_keyboard",
         "name": "get_math_types",
+        "table_name": "maths",
         "subtype_1": "get_math_type1",
         "subtype_2": "get_math_type2",
         "subtype_3": "get_math_type3",
