@@ -37,12 +37,13 @@ def message_handler(data, token):
                 #Отправка сообщения с ролями
                 if payload['name'] == 'get_roles_list':
                     roles = db_work.get_roles_in_roles(user_id)
+                    print(roles)
                     if roles is None:
                         message = "У вас пока что нет ролей!\nДобавьте же их!"
                     else:
                         message = "Ваши текущие роли:"
                         for role in roles:
-                            message += "\n"+str(role)
+                            message += "\n"+str(role[0])
                     vkAPI.send_message(user_id, token, message, keyboards.get_roles_keyboard(roles))
 
 
