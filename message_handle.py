@@ -45,6 +45,29 @@ def message_handler(data, token):
                 if payload['name'] == 'get_now_tasks_list':
                     vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
 
+            # change user data
+            elif payload['type'] == 'change_info':
+                # Изменение ролей
+                if payload['name'] == 'change_role':
+                    availability = db_work.check_roles_in_roles(user_id,payload['role'])
+                    if payload['do'] == 'add':
+                        if availability:
+                            message = "У вас уже есть эта роль!"
+                        elif not availability:
+                            db_work.add_role(user_id, payload['role'])
+                            message = "Роль " + payload['role'] + " добавлена"
+                    elif payload['do'] == 'delete':
+                        if not availability:
+                            message = "У вас нет этой роли!"
+                        elif availability:
+                            db_work.del_role(user_id, payload['role'])
+                            message = "Роль " + payload['role'] + " удалена"
+                    buff = db_work.get_roles_in_roles(user_id)
+                    roles = []
+                    for item in buff:
+                        roles.append(item[0])
+                    vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_roles_keyboard(roles))
+
 
 
 
