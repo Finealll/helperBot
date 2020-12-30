@@ -41,11 +41,22 @@ def check_roles_in_roles(user_id: str, role: str):
     cur.execute('''SELECT * FROM roles WHERE user_id=? AND role=?;''', (user_id, role))
     return False if cur.fetchone() == None else True
 
+
+def check_free_numbers(table: str):
+    cur.execute(f'''SELECT num_of_task FROM {table} WHERE status IS ?;''', ('not complete',))
+    return False if cur.fetchone() == None else True
+
+
+def check_free_numbers_by_status_and_type(table: str, type: int):
+    cur.execute(f'''SELECT num_of_task FROM {table} WHERE status IS ? AND type_of_task IS ?;''', ('not complete', type))
+    return False if cur.fetchone() == None else True
+
 # Getters
 
 def get_free_numbers(table: str):
     cur.execute(f'''SELECT num_of_task FROM {table} WHERE status IS ?;''', ('not complete',))
     return cur.fetchall()
+
 
 def get_roles_in_roles(user_id: str):
     cur.execute('''SELECT role FROM roles WHERE user_id=?;''', (user_id,))
