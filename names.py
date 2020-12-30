@@ -7,3 +7,9 @@ subject_to_table = {
     name_of_subject[2]: table_name[2],
     name_of_subject[3]: table_name[3],
 }
+table_to_subject = {
+    table_name[0]: name_of_subject[0],
+    table_name[1]: name_of_subject[1],
+    table_name[2]: name_of_subject[2],
+    table_name[3]: name_of_subject[3],
+}
