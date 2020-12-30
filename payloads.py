@@ -3,7 +3,7 @@ payloads = {
     #open keyboards
     "get_main_keyboard": {     # Открытие главной клавы
         "type": "open_keyboard",
-        "name": "get_roles_list"
+        "name": "get_main_keyboard"
     },
     "get_tasks_list": {     #Открытие списка предметов по скилам
         "type": "open_keyboard",

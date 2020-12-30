@@ -29,6 +29,9 @@ def message_handler(data, token):
         if 'type' in payload.keys():
             # open keyboards
             if payload['type'] == 'open_keyboard':
+                # Переход на главную
+                if payload['name'] == 'get_main_keyboard':
+                    vkAPI.send_message(user_id, token, "Главная:", keyboard=keyboards.get_main_keyboard())
                 # Переход к предметам по ролям
                 if payload['name'] == 'get_tasks_list':
                     vkAPI.send_message(user_id, token, "Переход к предметам")
