@@ -59,7 +59,9 @@ def check_free_numbers_by_status_and_type(table: str, type: int):
 
 def check_is_added_task(table: str, num:int, type: int):
     cur.execute(f'''SELECT status FROM {table} WHERE num_of_task IS ? AND type_of_task IS ?;''', (num, type))
-    return True if cur.fetchone() != None and cur.fetchone()[0] != 'not completed' else False
+    if cur.fetchone() is None:
+        return False
+    return True if cur.fetchone()[0] != 'not completed' else False
 
 # Getters
 
