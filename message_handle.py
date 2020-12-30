@@ -31,26 +31,18 @@ def message_handler(data, token):
             if payload['type'] == 'open_keyboard':
                 if payload['name'] == 'get_tasks_list':
                     vkAPI.send_message(user_id, token, "Переход к предметам")
-
-            # send info message
-            elif payload['type'] == 'send_info_message':
                 #Отправка сообщения с ролями
-                if payload['name'] == 'get_roles_list':
+                elif payload['name'] == 'get_roles_list':
                     buff = db_work.get_roles_in_roles(user_id)
                     roles = []
                     for item in buff:
                         roles.append(item[0])
-                    if roles is None:
-                        message = "У вас пока что нет ролей!\nДобавьте же их!"
-                    else:
-                        message = "Ваши текущие роли:"
-                        for role in roles:
-                            message += "\n"+str(role)
-                    vkAPI.send_message(user_id, token, message, keyboards.get_roles_keyboard(roles))
+                    vkAPI.send_message(user_id, token, 'Роли:', keyboard=keyboards.get_roles_keyboard(roles))
 
-
+            # send info message
+            elif payload['type'] == 'send_info_message':
                 #Отправка сообщения с текущими заданиями
-                elif payload['name'] == 'get_now_tasks_list':
+                if payload['name'] == 'get_now_tasks_list':
                     vkAPI.send_message(user_id, token, "Переход к текущим заданиям")
 
 

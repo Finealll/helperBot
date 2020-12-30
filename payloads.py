@@ -1,9 +1,17 @@
 #payloads для всего
 payloads = {
     #open keyboards
+    "get_main_keyboard": {     # Открытие главной клавы
+        "type": "open_keyboard",
+        "name": "get_roles_list"
+    },
     "get_tasks_list": {     #Открытие списка предметов по скилам
         "type": "open_keyboard",
         "name": "get_tasks_list"
+    },
+    "get_roles_list": {     # Открытие ролей
+        "type": "open_keyboard",
+        "name": "get_roles_list"
     },
     #программирование
     "get_progers_types": {  #Открытие типов задач программирования
@@ -101,11 +109,6 @@ payloads = {
     "get_now_tasks_list": {  # Открытие своих задач
         "type": "send_info_message",
         "name": "get_now_tasks_list"
-    },
-    # Открытие ролей
-    "get_roles_list": {
-        "type": "send_info_message",
-        "name": "get_roles_list"
     },
     #Роль
     "change_role": {

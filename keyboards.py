@@ -16,17 +16,16 @@ def get_main_keyboard():
 def get_roles_keyboard(roles_now):
     buttons = []
     for role in roles.roles:
-        payload = payloads.payloads['change_role']
+        payload = dict(payloads.payloads['change_role'])
         payload['role'] = role
         if role in roles_now:
             payload['do'] = 'delete'
-            buttons.append(kg.Button.text(label='-'+role, payload=payload, color='negative'))
+            buttons.append(kg.Button.text(label='Удалить роль \"'+role+'\"', payload=payload, color='negative'))
         else:
             payload['do'] = 'add'
-            buttons.append(kg.Button.text(label='+'+role, payload=payload, color='positive'))
-    generator = kg.KeyBoard(inline=True)
+            buttons.append(kg.Button.text(label='Добавить роль \"'+role+'\"', payload=payload, color='positive'))
+    buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
+    generator = kg.KeyBoard()
     generator.load(buttons)
     kb = generator.get()
-    print(kb)
     return kb
-
