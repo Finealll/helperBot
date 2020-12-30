@@ -6,7 +6,7 @@ import json
 def admin_get_users(user_id, token):
     users = admin_db.GetUsers()
     for user in users:
-        vkAPI.send_message(user_id, token, message=user[0]+" "+user[1]+" "+user[2])
+        vkAPI.send_message(user_id, token, message=user[0] + " " + user[1] + " " + user[2])
 
 
 def admin_delete_users(user_id, token):
@@ -74,3 +74,18 @@ def change_role(user_id, token, payload):
     roles = db_work.get_roles_in_roles(user_id)
     vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_roles_keyboard(roles))
 
+
+# Work with tasks
+def add_task(user_id, token, payload):
+    table_name = names.subject_to_table[payload['subject']]
+    free_numbers = db_work.get_free_numbers(table_name, payload['type_task'])
+    if db_work.check_is_added_task(table_name, payload['number'], payload['type_task']):
+        vkAPI.send_message(user_id, token, 'Задание взял уже кто то другой( \nВозьмите другое',
+                           keyboard=keyboards.get_free_numbers_keyboard(payload['subject'], free_numbers,
+                                                                        payload['type_task']))
+    else:
+        db_work.update_field(table_name, payload['number'], payload['type_task'], 'in process', user_id)
+        message = f'Добавлено: {payload["subject"]} номер {payload["number"]}'
+        vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_free_numbers_keyboard(payload['subject'],
+                                                                                                 free_numbers,
+                                                                                                 payload['type_task']))

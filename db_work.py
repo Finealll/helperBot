@@ -31,6 +31,12 @@ def del_role(user_id: str, role: str):
     else:
         return 0
 
+
+# update table
+def update_field(table: str, num: int, type: int, status: str = "not complete", user_id: str = "-", answer: str = "-"):
+    cur.execute(f'''UPDATE {table} SET status = ?, user_id = ?, answer = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (status, user_id, answer, num, type,))
+    conn.commit()
+
 # Checkers
 def check_user_in_users(user_id):
     cur.execute('''SELECT * FROM users WHERE user_id=?;''', (user_id,))
@@ -50,6 +56,10 @@ def check_free_numbers(table: str):
 def check_free_numbers_by_status_and_type(table: str, type: int):
     cur.execute(f'''SELECT num_of_task FROM {table} WHERE status IS ? AND type_of_task IS ?;''', ('not complete', type))
     return False if cur.fetchone() == None else True
+
+def check_is_added_task(table: str, num:int, type: int):
+    cur.execute(f'''SELECT status FROM {table} WHERE num_of_task IS ? AND type_of_task IS ?;''', (num, type))
+    return True if cur.fetchone() != None and cur.fetchone()[0] != 'not completed' else False
 
 # Getters
 
@@ -71,5 +81,3 @@ def get_roles_in_roles(user_id: str):
     return roles
 
 
-#buff = get_roles_in_roles('209640539')
-#print(array)

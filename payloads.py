@@ -101,26 +101,29 @@ payloads = {
     "add_task": {
         "type": "add_task",
         "subject": "",
-        "number": "",
+        "number": 0,
         "type_task": 0,
     },
     #Удаление задания
     "delete_task": {
         "type": "delete_task",
         "subject": "",
-        "number": "",
+        "number": 0,
+        "type_task": 0,
     },
     #Отправка задания
     "push_task": {
         "type": "push_task",
         "subject": "",
-        "number": "",
+        "number": 0,
+        "type_task": 0,
     },
     #Обновление задания
     "update_task": {
         "type": "update_task",
         "subject": "",
-        "number": "",
+        "number": 0,
+        "type_task": 0,
     },
     #Отправка сообщений с данными
     "get_now_tasks_list": {  # Открытие своих задач

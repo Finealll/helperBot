@@ -77,6 +77,10 @@ def message_handler(data, token):
                 if payload['name'] == 'change_role':
                     bot_methods.change_role(user_id, token, payload)
 
+            # Add task
+            if payload['type'] == 'add_task':
+                bot_methods.add_task(user_id, token, payload)
+
 
 def event_handler(data, token):
     return 1
