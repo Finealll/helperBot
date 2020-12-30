@@ -90,7 +90,7 @@ def get_free_numbers_keyboard(subject, free_numbers, type):
         buttons[j].append(kg.Button.text(str(i), payload=payload))
     buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
     generator = kg.KeyBoard()
-    generator.load(buttons)
+    generator.extra_load(buttons)
     kb = generator.get()
     return kb
 

@@ -142,6 +142,12 @@ class KeyBoard:
         return self.keyboard
 
 
+    def extra_load(self, buttons: list):
+        self.buttons = buttons
+        self.keyboard['buttons'] = buttons
+        return self.keyboard
+
+
     def get(self):
         return json.dumps(self.keyboard, ensure_ascii=False)
 
