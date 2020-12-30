@@ -35,34 +35,12 @@ def get_subject_types(user_id, token, payload):
     type1 = None
     type2 = None
     type3 = None
-    if payload['name'] == 'get_progers_types':
-        if db_work.check_free_numbers_by_status_and_type('progers', 1):
-            type1 = 'get_progers_type1'
-        if db_work.check_free_numbers_by_status_and_type('progers', 2):
-            type2 = 'get_progers_type2'
-        if db_work.check_free_numbers_by_status_and_type('progers', 3):
-            type3 = 'get_progers_type3'
-    elif payload['name'] == 'get_eltech_types':
-        if db_work.check_free_numbers_by_status_and_type('eltech', 1):
-            type1 = 'get_eltech_type1'
-        if db_work.check_free_numbers_by_status_and_type('eltech', 2):
-            type2 = 'get_eltech_type2'
-        if db_work.check_free_numbers_by_status_and_type('eltech', 3):
-            type3 = 'get_eltech_type3'
-    elif payload['name'] == 'get_physics_types':
-        if db_work.check_free_numbers_by_status_and_type('physics', 1):
-            type1 = 'get_physics_type1'
-        if db_work.check_free_numbers_by_status_and_type('physics', 2):
-            type2 = 'get_physics_type2'
-        if db_work.check_free_numbers_by_status_and_type('physics', 3):
-            type3 = 'get_physics_type3'
-    elif payload['name'] == 'get_math_types':
-        if db_work.check_free_numbers_by_status_and_type('maths', 1):
-            type1 = 'get_math_type1'
-        if db_work.check_free_numbers_by_status_and_type('maths', 2):
-            type2 = 'get_math_type2'
-        if db_work.check_free_numbers_by_status_and_type('maths', 3):
-            type3 = 'get_math_type3'
+    if db_work.check_free_numbers_by_status_and_type(payload['table_name'], 1):
+        type1 = payload['subtype1']
+    if db_work.check_free_numbers_by_status_and_type(payload['table_name'], 2):
+        type1 = payload['subtype2']
+    if db_work.check_free_numbers_by_status_and_type(payload['table_name'], 3):
+        type1 = payload['subtype3']
     keyboard = keyboards.get_subjects_types_keyboard(type1, type2, type3)
     vkAPI.send_message(user_id, token, "Выберите тип заданий", keyboard=keyboard)
 
