@@ -72,6 +72,8 @@ def get_free_progers_numbers_1(user_id, token):
     keyboard = keyboards.get_free_numbers_keyboard(names.name_of_subject[0], free_numbers, 1)
     vkAPI.send_message(user_id, token, "Выберите задания", keyboard=keyboard)
 
+get_free_progers_numbers_1("1", "1")
+
 # Work with roles
 def get_roles_list(user_id, token):
     roles = db_work.get_roles_in_roles(user_id)
