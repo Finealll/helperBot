@@ -35,3 +35,24 @@ def get_roles_keyboard(roles_now):
     generator.load(buttons)
     kb = generator.get()
     return kb
+
+
+def get_subjects_keyboard(roles_now):
+    pre_buttons = {
+        roles.roles[0]: kg.Button.text(label='Системка', payload=payloads.payloads['get_progers_types']),
+        roles.roles[1]: kg.Button.text(label='Элтех', payload=payloads.payloads['get_eltech_types']),
+        roles.roles[2]: kg.Button.text(label='Дискретка', payload=payloads.payloads['get_math_types']),
+        roles.roles[3]: kg.Button.text(label='Физика', payload=payloads.payloads['get_physics_types']),
+    }
+    buttons = []
+    if roles.roles[4] in roles_now:
+        for role in roles.roles[:-1]:
+            buttons.append(pre_buttons[role])
+    else:
+        for role in roles_now:
+            buttons.append(pre_buttons[role])
+    buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
+    generator = kg.KeyBoard()
+    generator.load(buttons)
+    kb = generator.get()
+    return kb

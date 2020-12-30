@@ -1,25 +1,17 @@
-import vkAPI, keyboards, admin_db, db_work
+import vkAPI, bot_methods
 import json
 
 def message_handler(data, token):
     user_id = data['object']['message']['from_id']
     names = vkAPI.get_user_info(user_id, token)
 
-    # start
+
     #no payload:
     # admin
     if data['object']['message']['text'] == 'admin_delete_users!':
-        admin_db.ClearUsers()
-        vkAPI.send_message(user_id, token, "Пользователи удаоены")
+        bot_methods.admin_delete_users(user_id, token)
     elif data['object']['message']['text'] == 'admin_get_users!':
-        users = admin_db.GetUsers()
-        for user in users:
-            vkAPI.send_message(user_id, token, message=user[0]+" "+user[1]+" "+user[2])
-    # Main
-    if data['object']['message']['text'] == 'На главную':
-        vkAPI.send_message(user_id, token, "Привет!", keyboard=keyboards.get_main_keyboard())
-
-
+        bot_methods.admin_get_users(user_id, token)
 
     #with payoad
     if 'payload' in data['object']['message']:
@@ -31,14 +23,13 @@ def message_handler(data, token):
             if payload['type'] == 'open_keyboard':
                 # Переход на главную
                 if payload['name'] == 'get_main_keyboard':
-                    vkAPI.send_message(user_id, token, "Главная:", keyboard=keyboards.get_main_keyboard())
+                    bot_methods.go_home(user_id, token)
                 # Переход к предметам по ролям
-                if payload['name'] == 'get_tasks_list':
-                    vkAPI.send_message(user_id, token, "Переход к предметам")
-                # Отправка сообщения с ролями
+                elif payload['name'] == 'get_tasks_list':
+                    bot_methods.get_task_list(user_id, token)
+                # Переход к выбору ролей
                 elif payload['name'] == 'get_roles_list':
-                    roles = db_work.get_roles_in_roles(user_id)
-                    vkAPI.send_message(user_id, token, 'Роли:', keyboard=keyboards.get_roles_keyboard(roles))
+                    bot_methods.get_roles_list(user_id, token)
 
             # send info message
             elif payload['type'] == 'send_info_message':
@@ -50,25 +41,7 @@ def message_handler(data, token):
             elif payload['type'] == 'change_info':
                 # Изменение ролей
                 if payload['name'] == 'change_role':
-                    availability = db_work.check_roles_in_roles(user_id, payload['role'])
-                    if payload['do'] == 'add':
-                        if availability:
-                            message = "У вас уже есть эта роль!"
-                        elif not availability:
-                            db_work.add_role(user_id, payload['role'])
-                            message = "Роль " + payload['role'] + " добавлена"
-                    elif payload['do'] == 'delete':
-                        if not availability:
-                            message = "У вас нет этой роли!"
-                        elif availability:
-                            db_work.del_role(user_id, payload['role'])
-                            message = "Роль " + payload['role'] + " удалена"
-                    roles = db_work.get_roles_in_roles(user_id)
-                    vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_roles_keyboard(roles))
-
-
-
-
+                    bot_methods.change_role(user_id, token, payload)
 
 
 def event_handler(data, token):
