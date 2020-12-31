@@ -97,6 +97,7 @@ def delete_task(user_id, token, payload):
     if db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
         db_work.update_field(table_name, payload['number'], payload['type_task'])
         vkAPI.send_message(user_id, token, 'Задание успешно отвязано!')
+        db_work.inc_refuse(user_id)
     else:
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
 
@@ -163,6 +164,7 @@ def send_file(user_id, token, payload):
         return
     else:
         db_work.update_status(table_name, payload['num'], payload['type_task'], 'complete')
+        db_work.inc_do(user_id)
         go_home(user_id, token)
 
 

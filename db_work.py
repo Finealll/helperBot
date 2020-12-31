@@ -130,3 +130,21 @@ def get_info_by_status(table: str, status: str):
     cur.execute(f'''SELECT num_of_task, type_of_task FROM {table} WHERE status IS ?;''', (status,))
     info = cur.fetchall()
     return info
+
+
+# Statistics
+def inc_do(user_id: str):
+    cur.execute(f'''SELECT count_all FROM users WHERE users.user_id IS ?;''', (user_id,))
+    count = cur.fetchone()[0]
+    count += 1
+    cur.execute('''UPDATE users SET count_all = ? WHERE user_id IS ?;''', (count, user_id,))
+    conn.commit()
+
+
+def inc_refuse(user_id: str):
+    cur.execute(f'''SELECT refuse_all FROM users WHERE users.user_id IS ?;''', (user_id,))
+    refuse = cur.fetchone()[0]
+    refuse += 1
+    cur.execute('''UPDATE users SET refuse_all = ? WHERE user_id IS ?;''', (refuse, user_id,))
+    conn.commit()
+
