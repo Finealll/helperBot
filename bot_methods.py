@@ -101,6 +101,17 @@ def delete_task(user_id, token, payload):
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
 
 
+def push_task(user_id, token, payload):
+    table_name = names.subject_to_table[payload['subject']]
+    if not db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
+        vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
+        return
+    db_work.update_status(table_name, payload['number'], payload['type_task'], 'loading')
+    message = "Пришлите в диалог ответ на вопрос в формате .docx, затем нажмите кнопку отправить."
+    keyboard = keyboards.get_push_file_keyboard(payload['subject'], payload['number'], payload['type_task'])
+    vkAPI.send_message(user_id, token, message, keyboard=keyboard)
+
+
 
 def get_type_question(type:int):
     if type == 1:
@@ -128,4 +139,36 @@ def get_faq(user_id, token):
     vkAPI.send_message(user_id, token, names.faq)
 
 
+def check_dialog(user_id, token):
+    for table in names.table_name:
+        if db_work.check_is_exist_status(table, 'loading'):
+            vkAPI.send_message(user_id, token, 'Для совершения этого действия выйдите из диалога загрузки файлов!')
+            return True
+    return False
+
+
+def write_attachment(user_id, token, attachment):
+    answer = attachment['owner_id']+'_'+attachment['id']
+    for table in names.table_name:
+        if db_work.check_is_exist_status(table, 'loading'):
+            info = db_work.get_info_by_status(table, 'loading')[0]
+            db_work.update_answer(table, info[0], info[1], answer)
+
+
+def send_file(user_id, token, payload):
+    table_name = names.subject_to_table[payload['subject']]
+    answer = db_work.get_answer(table_name, payload['num'], payload['type_task'])
+    if answer == '-':
+        vkAPI.send_message(user_id, token, "Отправьте документ в чат перед нажатием на кнопку!")
+        return
+    else:
+        db_work.update_status(table_name, payload['num'], payload['type_task'], 'complete')
+        go_home(user_id, token)
+
+
+
+def go_home_without_saving(user_id, token, payload):
+    db_work.update_field(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], 'in process',
+                         user_id, '-')
+    go_home(user_id, token)
 

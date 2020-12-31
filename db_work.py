@@ -38,6 +38,16 @@ def update_field(table: str, num: int, type: int, status: str = "not complete", 
     conn.commit()
 
 
+def update_status(table: str, num: int, type: int, status: str = "not complete"):
+    cur.execute(f'''UPDATE {table} SET status = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (status, num, type))
+    conn.commit()
+
+
+def update_answer(table: str, num: int, type: int, answer: str = "-"):
+    cur.execute(f'''UPDATE {table} SET answer = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (answer, num, type))
+    conn.commit()
+
+
 # Checkers
 def check_user_in_users(user_id):
     cur.execute('''SELECT * FROM users WHERE user_id=?;''', (user_id,))
@@ -74,6 +84,12 @@ def check_is_added_task_by_user(table: str, num:int, type: int, user_id: str):
         return False
     return True if fetch[0] != 'not complete' else False
 
+
+def check_is_exist_status(table: str, status: str):
+    cur.execute(f'''SELECT status FROM {table} WHERE status IS ?;''', (status,))
+    return False if cur.fetchone() is None else True
+
+
 # Getters
 
 def get_free_numbers(table: str, type: int):
@@ -97,3 +113,20 @@ def get_now_tasks(table: str, user_id: str):
     cur.execute(f'''SELECT num_of_task, type_of_task FROM {table} WHERE user_id IS ? AND status IS ?;''', (user_id, 'in process',))
     return cur.fetchall()
 
+
+def get_status(table: str, num: int, type: int):
+    cur.execute(f'''SELECT status FROM {table} WHERE num_of_task IS ? AND type_of_task IS ?;''', (num, type,))
+    status = cur.fetchone()[0]
+    return status
+
+
+def get_answer(table: str, num: int, type: int):
+    cur.execute(f'''SELECT answer FROM {table} WHERE num_of_task IS ? AND type_of_task IS ?;''', (num, type,))
+    status = cur.fetchone()[0]
+    return status
+
+
+def get_info_by_status(table: str, status: str):
+    cur.execute(f'''SELECT num_of_task, type_of_task FROM {table} WHERE status IS ?;''', (status,))
+    info = cur.fetchall()
+    return info

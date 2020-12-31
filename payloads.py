@@ -132,7 +132,7 @@ payloads = {
     },
     "get_faq": {    # Отправка faq
         "type": "send_info_message",
-        "name": "get faq",
+        "name": "get_faq",
     },
     #Роль
     "change_role": {
@@ -146,5 +146,21 @@ payloads = {
         "type": "get_doc",
         "name": "get_tasks",
         "subject": "",
-    }
+    },
+    # Открытие главной клавы, с выходом из функций, затрагивающих бд
+    "get_main_keyboard_with_exit": {
+        "type": "file_pushing",
+        "name": "get_main_keyboard_with_exit",
+        "subject": "",
+        "num": 0,
+        "type_task": 0,
+    },
+    #Отправка файла
+    "send_file": {
+        "type": "file_pushing",
+        "name": "send_file",
+        "subject": "",
+        "num": 0,
+        "type_task": 0,
+    },
 }

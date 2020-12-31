@@ -13,12 +13,28 @@ def message_handler(data, token):
     elif data['object']['message']['text'] == 'admin_get_users!':
         bot_methods.admin_get_users(user_id, token)
 
+
+    if len(data['object']['message']['attachments']) > 0:
+        if data['object']['message']['attachments'][0]['type'] == 'doc':
+            bot_methods.write_attachment(user_id, token, data['object']['message']['attachments'][0]['doc'])
+
+
     #with payoad
     if 'payload' in data['object']['message']:
         payload = json.loads(data['object']['message']['payload'])
 
         # Обработка кнопок с кастомными payloadами
         if 'type' in payload.keys():
+
+            if payload['type'] == 'file_pushing':
+                if payload['name'] == 'get_main_keyboard_with_exit':
+                    bot_methods.go_home_without_saving(user_id, token, payload)
+                elif payload['name'] == 'send_file':
+                    bot_methods.send_file(user_id, token, payload)
+
+            if bot_methods.check_dialog(user_id, token):
+                return
+
             # open keyboards
             if payload['type'] == 'open_keyboard':
                 # Переход на главную
@@ -83,9 +99,14 @@ def message_handler(data, token):
             # Add task
             if payload['type'] == 'add_task':
                 bot_methods.add_task(user_id, token, payload)
+
             # Delete task
             if payload['type'] == 'delete_task':
                 bot_methods.delete_task(user_id, token, payload)
+
+            # Push task
+            if payload['type'] == 'push_task':
+                bot_methods.push_task(user_id, token, payload)
 
 
 def event_handler(data, token):
