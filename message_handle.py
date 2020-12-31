@@ -12,8 +12,6 @@ def message_handler(data, token):
         bot_methods.admin_delete_users(user_id, token)
     elif data['object']['message']['text'] == 'admin_get_users!':
         bot_methods.admin_get_users(user_id, token)
-    elif data['object']['message']['text'] == 'admin_send!':
-        vkAPI.test_uwed(token)
 
 
     if len(data['object']['message']['attachments']) > 0:
