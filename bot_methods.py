@@ -174,3 +174,4 @@ def go_home_without_saving(user_id, token, payload):
                          user_id, '-')
     go_home(user_id, token)
 
+
