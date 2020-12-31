@@ -148,7 +148,7 @@ def check_dialog(user_id, token):
 
 
 def write_attachment(user_id, token, attachment):
-    answer = attachment['owner_id']+'_'+attachment['id']
+    answer = str(attachment['owner_id'])+'_'+str(attachment['id'])
     for table in names.table_name:
         if db_work.check_is_exist_status(table, 'loading'):
             info = db_work.get_info_by_status(table, 'loading')[0]

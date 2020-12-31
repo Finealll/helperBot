@@ -31,6 +31,7 @@ def message_handler(data, token):
                     bot_methods.go_home_without_saving(user_id, token, payload)
                 elif payload['name'] == 'send_file':
                     bot_methods.send_file(user_id, token, payload)
+                return
 
             if bot_methods.check_dialog(user_id, token):
                 return
