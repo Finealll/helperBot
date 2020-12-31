@@ -82,7 +82,7 @@ def check_is_added_task_by_user(table: str, num:int, type: int, user_id: str):
     fetch = cur.fetchone()
     if fetch is None:
         return False
-    return True if fetch[0] != 'not complete' else False
+    return True if fetch[0] != 'not complete' and fetch[0] != 'complete' else False
 
 
 def check_is_exist_status(table: str, status: str):
