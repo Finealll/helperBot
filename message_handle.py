@@ -25,6 +25,9 @@ def message_handler(data, token):
     if 'payload' in data['object']['message']:
         payload = json.loads(data['object']['message']['payload'])
 
+        if 'command' in payload.keys() and payload['command'] == 'start':
+            bot_methods.add_new_user(user_id, token)
+
         # Обработка кнопок с кастомными payloadами
         if 'type' in payload.keys():
 

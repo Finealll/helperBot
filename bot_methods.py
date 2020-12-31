@@ -16,6 +16,12 @@ def admin_delete_users(user_id, token):
 
 # user methods
 # Main
+
+def add_new_user(user_id, token):
+    info = vkAPI.get_user_info(user_id, token)
+    db_work.add_user(user_id, info[0], info[1])
+
+
 def go_home(user_id, token):
     vkAPI.send_message(user_id, token, "Главная:", keyboard=keyboards.get_main_keyboard())
 
