@@ -22,7 +22,7 @@ cur.execute('''CREATE TABLE IF NOT EXISTS maths(
     type_of_task INTEGER,
     user_id TEXT,
     status TEXT,
-    answer BLOB,
+    answer TEXT,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );''')
 
@@ -31,7 +31,7 @@ cur.execute('''CREATE TABLE IF NOT EXISTS physics(
     type_of_task INTEGER,
     user_id TEXT,
     status TEXT,
-    answer BLOB,
+    answer TEXT,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );''')
 
@@ -40,7 +40,7 @@ cur.execute('''CREATE TABLE IF NOT EXISTS progers(
     type_of_task INTEGER,
     user_id TEXT,
     status TEXT,
-    answer BLOB,
+    answer TEXT,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );''')
 
@@ -49,7 +49,7 @@ cur.execute('''CREATE TABLE IF NOT EXISTS eltech(
     type_of_task INTEGER,
     user_id TEXT,
     status TEXT,
-    answer BLOB,
+    answer TEXT,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );''')
 

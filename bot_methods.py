@@ -91,6 +91,17 @@ def add_task(user_id, token, payload):
                                                                                                  free_numbers,
                                                                                                  payload['type_task']))
 
+
+def delete_task(user_id, token, payload):
+    table_name = names.subject_to_table(payload['subject'])
+    if db_work.check_is_added_task(table_name, payload['number'], payload['type_task']):
+        db_work.update_field(table_name, payload['number'], payload['type'])
+        vkAPI.send_message(user_id, token, 'Задание успешно отвязано!')
+    else:
+        vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
+
+
+
 def get_type_question(type:int):
     if type == 1:
         return 'оценка знаний'

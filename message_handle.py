@@ -80,6 +80,9 @@ def message_handler(data, token):
             # Add task
             if payload['type'] == 'add_task':
                 bot_methods.add_task(user_id, token, payload)
+            # Delete task
+            if payload['type'] == 'delete_task':
+                bot_methods.delete_task(user_id, token, payload)
 
 
 def event_handler(data, token):
