@@ -116,7 +116,7 @@ def get_now_tasks(user_id, token):
         arr = db_work.get_now_tasks(names.table_name[i], user_id)
         for item in arr:
             message = f'{names.name_of_subject[i]}. {str(get_type_question(item[1])).capitalize()}. Номер {item[0]}'
-            keyboard = keyboards.get_now_task_keyboard(names.table_name[i], item[0], item[1])
+            keyboard = keyboards.get_now_task_keyboard(names.name_of_subject[i], item[0], item[1])
             vkAPI.send_message(user_id, token, message, keyboard=keyboard)
 
 
