@@ -112,13 +112,20 @@ def get_type_question(type:int):
 
 
 def get_now_tasks(user_id, token):
+    count = 0
     for i in range(len(names.table_name)):
         arr = db_work.get_now_tasks(names.table_name[i], user_id)
         for item in arr:
             message = f'{names.name_of_subject[i]}. {str(get_type_question(item[1])).capitalize()}. Номер {item[0]}'
             keyboard = keyboards.get_now_task_keyboard(names.name_of_subject[i], item[0], item[1])
             vkAPI.send_message(user_id, token, message, keyboard=keyboard)
+            count += 1
+    if count == 0:
+        vkAPI.send_message(user_id, token, 'У вас нет заданий!')
 
+
+def get_faq(user_id, token):
+    vkAPI.send_message(user_id, token, names.faq)
 
 
 

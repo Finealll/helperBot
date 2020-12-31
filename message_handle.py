@@ -70,6 +70,9 @@ def message_handler(data, token):
                 # Отправка сообщения с текущими заданиями
                 if payload['name'] == 'get_now_tasks_list':
                     bot_methods.get_now_tasks(user_id, token)
+                    # Отправка faq
+                elif payload['name'] == 'get_faq':
+                    bot_methods.get_faq(user_id, token)
 
             # change user data
             elif payload['type'] == 'change_info':

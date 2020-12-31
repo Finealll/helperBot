@@ -130,6 +130,10 @@ payloads = {
         "type": "send_info_message",
         "name": "get_now_tasks_list"
     },
+    "get_faq": {    # Отправка faq
+        "type": "send_info_message",
+        "name": "get faq",
+    },
     #Роль
     "change_role": {
         "type": "change_info",

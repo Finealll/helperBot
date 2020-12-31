@@ -7,6 +7,7 @@ def get_main_keyboard():
     buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
     buttons.append(kg.Button.text(label='Мои задания', payload=payloads.payloads['get_now_tasks_list']))
     buttons.append(kg.Button.text(label='Роли', payload=payloads.payloads['get_roles_list']))
+    buttons.append(kg.Button.text(label='FAQ', payload=payloads.payloads['get_faq']))
     generator = kg.KeyBoard(False, False, False)
     generator.load(buttons)
     kb = generator.get()
