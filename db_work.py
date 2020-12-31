@@ -34,8 +34,9 @@ def del_role(user_id: str, role: str):
 
 # update table
 def update_field(table: str, num: int, type: int, status: str = "not complete", user_id: str = "-", answer: str = "-"):
-    cur.execute(f'''UPDATE {table} SET status = ?, user_id = ?, answer = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (status, user_id, answer, num, type,))
+    cur.execute(f'''UPDATE {table} SET status = ?, user_id = ?, answer = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (status, user_id, answer, num, type))
     conn.commit()
+
 
 # Checkers
 def check_user_in_users(user_id):

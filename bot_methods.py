@@ -93,9 +93,9 @@ def add_task(user_id, token, payload):
 
 
 def delete_task(user_id, token, payload):
-    table_name = names.subject_to_table(payload['subject'])
+    table_name = names.subject_to_table[payload['subject']]
     if db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
-        db_work.update_field(table_name, payload['number'], payload['type'])
+        db_work.update_field(table_name, payload['number'], payload['type_task'])
         vkAPI.send_message(user_id, token, 'Задание успешно отвязано!')
     else:
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
