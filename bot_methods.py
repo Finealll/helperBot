@@ -87,7 +87,10 @@ def add_random_number(user_id, token, payload):
                                keyboard=keyboards.get_main_keyboard(user_id))
             return
     free_numbers1 = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
-    index = random.randint(0, len(free_numbers1))
+    if len(free_numbers1) == 0:
+        vkAPI.send_message(user_id, token, "Задания по этому предмету закончились!", keyboard=keyboards.get_main_keyboard(user_id))
+    index = random.randint(1, len(free_numbers1))
+    index -= 1
 
     if db_work.check_is_added_task(table_name, free_numbers1[index][0], payload['type_task']):
         add_random_number(user_id, token, payload)
@@ -158,7 +161,7 @@ def check_dialog(user_id, token):
 
 
 def write_attachment(user_id, token, attachment):
-    answer = str(attachment['owner_id'])+'_'+str(attachment['id'])
+    answer = str('doc'+attachment['owner_id'])+'_'+str(attachment['id']+'_'+attachment['access_key'])
     for table in names.table_name:
         if db_work.check_is_exist_status(table, user_id, 'loading'):
             info = db_work.get_info_by_status(table, user_id, 'loading')
@@ -188,8 +191,8 @@ def check_returned(user_id, token):
             answer = db_work.get_answer(table, info[0], info[1])
             db_work.update_answer(table,info[0], info[1])
             message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
-                      f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nВаш ответ: {"vk.com/doc"+answer}'
-            vkAPI.send_message(user_id, token, message, attachment="doc"+answer, keyboard=keyboards.get_main_keyboard(user_id))
+                      f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nВаш ответ: {"vk.com/"+answer}'
+            vkAPI.send_message(user_id, token, message, attachment=answer, keyboard=keyboards.get_main_keyboard(user_id))
 
 
 
@@ -199,5 +202,11 @@ def go_home_without_saving(user_id, token, payload):
     go_home(user_id, token)
 
 
+def get_tasks(user_id, token, payload):
+    for item in names.questions:
+        if item['subject'] == payload['subject']:
+            attachment = item['attachment']
+            break
+    vkAPI.send_message(user_id, token, 'Задания:', attachment=attachment)
 
 

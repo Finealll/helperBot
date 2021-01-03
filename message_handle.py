@@ -86,6 +86,12 @@ def message_handler(data, token):
                 elif payload['name'] == 'get_physics_type3':
                     bot_methods.get_free_progers_numbers(user_id, token, names.table_name[3], 3)
 
+            # send docs
+            elif payload['type'] == 'get_doc':
+                # Отправка документов с заданием
+                if payload['name'] == 'get_tasks':
+                    bot_methods.get_tasks(user_id, token, payload)
+
 
             # send info message
             elif payload['type'] == 'send_info_message':

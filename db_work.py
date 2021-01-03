@@ -13,7 +13,7 @@ def add_user(user_id: str, first_name: str, last_name: str):
     else:
         return 0
 
-# add roles
+# add controlers
 def add_controlers(user_id: str, subject: str):
     if not check_controler_in_controlers(user_id, subject):
         cur.execute('''INSERT INTO controlers VALUES(?,?);''', (subject, user_id))
@@ -106,10 +106,10 @@ def get_free_numbers_and_text(table: str, type: int):
 def get_controlers_in_controlers(user_id: str):
     cur.execute('''SELECT subject FROM controlers WHERE user_id=?;''', (user_id,))
     buff = cur.fetchall()
-    roles = []
+    controlers = []
     for item in buff:
-        roles.append(item[0])
-    return roles
+        controlers.append(item[0])
+    return controlers
 
 def get_now_task(table: str, user_id: str):
     cur.execute(f'''SELECT num_of_task, type_of_task, text FROM {table} WHERE user_id IS ? AND status IS ?;''', (user_id, 'in process',))
