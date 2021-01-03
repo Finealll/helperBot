@@ -101,6 +101,7 @@ payloads = {
     "add_task": {
         "type": "add_task",
         "subject": "",
+        "text": "",
         "number": 0,
         "type_task": 0,
     },
@@ -108,6 +109,7 @@ payloads = {
     "delete_task": {
         "type": "delete_task",
         "subject": "",
+        "text": "",
         "number": 0,
         "type_task": 0,
     },

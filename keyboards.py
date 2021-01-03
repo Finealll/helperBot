@@ -55,9 +55,10 @@ def get_free_numbers_keyboard(subject, free_numbers, type):
             j += 1
         payload = dict(payloads.payloads['add_task'])
         payload['subject'] = subject
-        payload['number'] = free_numbers[i]
+        payload['number'] = free_numbers[i][0]
+        payload['text'] = free_numbers[i][1]
         payload['type_task'] = type
-        buttons[j].append(kg.Button.text(str(free_numbers[i]), payload=payload))
+        buttons[j].append(kg.Button.text(str(free_numbers[i][0]), payload=payload))
     buttons.append([])
     buttons[j+1].append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
     generator = kg.KeyBoard()

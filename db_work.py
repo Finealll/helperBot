@@ -57,6 +57,11 @@ def update_answer(table: str, num: int, type: int, answer: str = "-"):
     conn.commit()
 
 
+def update_date(table: str, num: int, type: int, time: str = datetime.datetime.now()):
+    cur.execute(f'''UPDATE {table} SET datetime = ? WHERE num_of_task IS ? AND type_of_task IS ?;''',
+                (time, num, type))
+    conn.commit()
+
 # Checkers
 def check_user_in_users(user_id):
     cur.execute('''SELECT * FROM users WHERE user_id=?;''', (user_id,))
@@ -101,13 +106,11 @@ def check_is_exist_status(table: str, status: str):
 
 # Getters
 
-def get_free_numbers(table: str, type: int):
-    cur.execute(f'''SELECT num_of_task FROM {table} WHERE status IS ? AND type_of_task IS ?;''', ('not complete', type))
+def get_free_numbers_and_text(table: str, type: int):
+    cur.execute(f'''SELECT num_of_task, text FROM {table} WHERE status IS ? AND type_of_task IS ?;''', ('not complete', type))
     buff = cur.fetchall()
-    free_numbers = []
-    for item in buff:
-        free_numbers.append(item[0])
-    return free_numbers
+    return buff
+
 
 
 def get_controlers_in_controlers(user_id: str):

@@ -51,7 +51,7 @@ def get_subject_types(user_id, token, payload):
 
 
 def get_free_progers_numbers(user_id, token, table_name, type):
-    free_numbers = db_work.get_free_numbers(table_name, type)
+    free_numbers = db_work.get_free_numbers_and_text(table_name, type)
     keyboard = keyboards.get_free_numbers_keyboard(names.table_to_subject[table_name], free_numbers, type)
     vkAPI.send_message(user_id, token, "Выберите задания", keyboard=keyboard)
 
@@ -60,15 +60,22 @@ def get_free_progers_numbers(user_id, token, table_name, type):
 # Work with tasks
 def add_task(user_id, token, payload):
     table_name = names.subject_to_table[payload['subject']]
+    for table in names.table_name:
+        if db_work.check_is_exist_status(table, 'in process'):
+            vkAPI.send_message(user_id, token, 'Нельзя взять больше одного задания за раз!\nВыполните текущее задание',
+                               keyboard=keyboards.get_main_keyboard())
+            return
+
     if db_work.check_is_added_task(table_name, payload['number'], payload['type_task']):
-        free_numbers = db_work.get_free_numbers(table_name, payload['type_task'])
+        free_numbers = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
         vkAPI.send_message(user_id, token, 'Задание взял уже кто то другой( \nВозьмите другое',
                            keyboard=keyboards.get_free_numbers_keyboard(payload['subject'], free_numbers,
                                                                         payload['type_task']))
     else:
         db_work.update_field(table_name, payload['number'], payload['type_task'], 'in process', user_id)
-        free_numbers = db_work.get_free_numbers(table_name, payload['type_task'])
-        message = f'Добавлено: {payload["subject"]} номер {payload["number"]}'
+        free_numbers = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
+        message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"])}. №{payload["number"]}' \
+                  f'\nЗадание: {payload["text"]}'
         vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_free_numbers_keyboard(payload['subject'],
                                                                                                  free_numbers,
                                                                                                  payload['type_task']))
@@ -90,7 +97,7 @@ def push_task(user_id, token, payload):
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
         return
     db_work.update_status(table_name, payload['number'], payload['type_task'], 'loading')
-    message = "Пришлите в диалог ответ на вопрос в формате .docx, затем нажмите кнопку отправить."
+    message = "Пришлите в диалог ответ на вопрос в формате .docx / .doc, затем нажмите кнопку отправить."
     keyboard = keyboards.get_push_file_keyboard(payload['subject'], payload['number'], payload['type_task'])
     vkAPI.send_message(user_id, token, message, keyboard=keyboard)
 
