@@ -13,9 +13,9 @@ table_to_subject = {
     table_name[3]: name_of_subject[3],
 }
 questions = [
-    {'subject': name_of_subject[0], 'attachment': 'doc209640539_582785959_ba0bcc55fc883fced7'},
-    {'subject': name_of_subject[1], 'attachment': 'doc209640539_582786079_04620d424a7aa6b634'},
-    {'subject': name_of_subject[2], 'attachment': 'doc209640539_582786196_8330f2f1c79ab63524'},
+    {'subject': name_of_subject[0], 'attachment': 'doc-201455689_580090252'},
+    {'subject': name_of_subject[1], 'attachment': 'doc-201455689_580090282'},
+    {'subject': name_of_subject[2], 'attachment': 'doc-201455689_580090267'},
 ]
 
 
