@@ -9,10 +9,6 @@ payloads = {
         "type": "open_keyboard",
         "name": "get_tasks_list"
     },
-    "get_roles_list": {     # Открытие ролей
-        "type": "open_keyboard",
-        "name": "get_roles_list"
-    },
     #программирование
     "get_progers_types": {  #Открытие типов задач программирования
         "type": "open_keyboard",

@@ -93,8 +93,8 @@ def check_is_added_task_by_user(table: str, num:int, type: int, user_id: str):
     return True if (fetch[0] != 'not complete' and fetch[0] != 'complete') else False
 
 
-def check_is_exist_status(table: str, status: str):
-    cur.execute(f'''SELECT status FROM {table} WHERE status IS ?;''', (status,))
+def check_is_exist_status(table: str, user_id: str, status: str):
+    cur.execute(f'''SELECT status FROM {table} WHERE status IS ? and user_id IS ?;''', (status, user_id,))
     return False if cur.fetchone() is None else True
 
 
@@ -132,8 +132,8 @@ def get_answer(table: str, num: int, type: int):
     return status
 
 
-def get_info_by_status(table: str, status: str):
-    cur.execute(f'''SELECT num_of_task, type_of_task FROM {table} WHERE status IS ?;''', (status,))
+def get_info_by_status(table: str, user_id: str, status: str):
+    cur.execute(f'''SELECT num_of_task, type_of_task, text FROM {table} WHERE status IS ? and user_id IS ?;''', (status, user_id,))
     info = cur.fetchall()
     return info
 

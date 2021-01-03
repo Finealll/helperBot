@@ -61,7 +61,7 @@ def get_free_progers_numbers(user_id, token, table_name, type):
 def add_task(user_id, token, payload):
     table_name = names.subject_to_table[payload['subject']]
     for table in names.table_name:
-        if db_work.check_is_exist_status(table, 'in process'):
+        if db_work.check_is_exist_status(table, user_id, 'in process'):
             vkAPI.send_message(user_id, token, 'Нельзя взять больше одного задания за раз!\nВыполните текущее задание',
                                keyboard=keyboards.get_main_keyboard())
             return
@@ -82,7 +82,7 @@ def add_task(user_id, token, payload):
 def delete_task(user_id, token, payload):
     table_name = names.subject_to_table[payload['subject']]
     if db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
-        db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'not complete')
+        db_work.update_status(table_name, payload['number'], payload['type_task'], '-', 'not complete')
         vkAPI.send_message(user_id, token, 'Задание успешно отвязано!')
         db_work.inc_refuse(user_id)
     else:
@@ -113,7 +113,7 @@ def get_type_question(type:int):
 def get_now_task(user_id, token):
     buff = False
     for table in names.table_name:
-        if db_work.check_is_exist_status(table, 'in process'):
+        if db_work.check_is_exist_status(table, user_id, 'in process'):
             task = db_work.get_now_task(table, user_id)
             message = f'Текущее задание:\n{names.table_to_subject[table]}. {get_type_question(task[1]).capitalize()}. №{task[0]}' \
                       f'\nЗадание: {task[2]}'
@@ -130,7 +130,7 @@ def get_faq(user_id, token):
 
 def check_dialog(user_id, token):
     for table in names.table_name:
-        if db_work.check_is_exist_status(table, 'loading'):
+        if db_work.check_is_exist_status(table, user_id, 'loading'):
             vkAPI.send_message(user_id, token, 'Для совершения этого действия выйдите из диалога загрузки файлов!')
             return True
     return False
@@ -139,8 +139,8 @@ def check_dialog(user_id, token):
 def write_attachment(user_id, token, attachment):
     answer = str(attachment['owner_id'])+'_'+str(attachment['id'])
     for table in names.table_name:
-        if db_work.check_is_exist_status(table, 'loading'):
-            info = db_work.get_info_by_status(table, 'loading')[0]
+        if db_work.check_is_exist_status(table, user_id, 'loading'):
+            info = db_work.get_info_by_status(table, user_id, 'loading')[0]
             db_work.update_answer(table, info[0], info[1], answer)
 
 
@@ -153,7 +153,21 @@ def send_file(user_id, token, payload):
     else:
         db_work.update_status(table_name, payload['num'], payload['type_task'], user_id, 'complete')
         db_work.inc_do(user_id)
+        vkAPI.send_message(user_id, token, "Задание успешно отправлено!")
+        check_returned(user_id, token)
         go_home(user_id, token)
+
+
+
+def check_returned(user_id, token):
+    for table in names.table_name:
+        if db_work.check_is_exist_status(table, user_id, 'returned'):
+            info = db_work.get_info_by_status(table, user_id, 'returned')
+            db_work.update_status(table, info[0], info[1], user_id, 'in process')
+            answer = db_work.get_answer(table, info[0], info[1])
+            message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
+                      f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nОтвет: {answer}'
+            vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard())
 
 
 
