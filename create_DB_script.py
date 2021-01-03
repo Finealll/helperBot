@@ -2,13 +2,13 @@ import sqlite3, db_settings
 
 # Init DBs
 
-conn = sqlite3.connect(db_settings.patch)
-cur = conn.cursor()
 
 # Create Tables
 
 # Users, who will do tasks
 def create_users():
+    conn = sqlite3.connect(db_settings.patch)
+    cur = conn.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS users( 
         user_id TEXT PRIMARY KEY, 
         first_name TEXT, 
@@ -20,9 +20,12 @@ def create_users():
 
 # tasks
 def create_tasks(table_name: str):
+    conn = sqlite3.connect(db_settings.patch)
+    cur = conn.cursor()
     cur.execute(f'''CREATE TABLE IF NOT EXISTS {table_name}(
         num_of_task INTEGER,
         type_of_task INTEGER,
+        text TEXT,
         user_id TEXT,
         status TEXT,
         answer TEXT,
@@ -35,6 +38,8 @@ def create_tasks(table_name: str):
 
 
 def create_controls():
+    conn = sqlite3.connect(db_settings.patch)
+    cur = conn.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS controlers(
         subject TEXT,
         user_id TEXT,
@@ -42,5 +47,4 @@ def create_controls():
     );''')
     conn.commit()
 
-conn.commit()
 

@@ -22,6 +22,12 @@ def add_controlers(user_id: str, subject: str):
     else:
         return 0
 
+
+def add_field(table: str, num: int, type: int, text: str = '', user_id: str = "-", status: str = "not complete", answer: str = "-", time: str = datetime.datetime.now(),
+                 score: int = 0, count_of_scores: int = 0):
+    cur.execute(f'''INSERT INTO {table} VALUES(?,?,?,?,?,?,?,?,?);''', (num, type, text, user_id, status, answer, time, score, count_of_scores))
+    conn.commit()
+
 # delete role
 def del_role(user_id: str, subject: str):
     if check_controler_in_controlers(user_id, subject):
@@ -33,11 +39,11 @@ def del_role(user_id: str, subject: str):
 
 
 # update table
-def update_field(table: str, num: int, type: int, status: str = "not complete", user_id: str = "-", answer: str = "-", time: str = datetime.datetime.now(),
+def update_field(table: str, num: int, type: int, text: str = '', status: str = "not complete", user_id: str = "-", answer: str = "-", time: str = datetime.datetime.now(),
                  score: int = 0, count_of_scores: int = 0):
-    cur.execute(f'''UPDATE {table} SET status = ?, user_id = ?, answer = ?,
+    cur.execute(f'''UPDATE {table} SET text = ?, status = ?, user_id = ?, answer = ?,
      datetime = ?, score = ?, count_of_scores = ? WHERE num_of_task IS ? AND type_of_task IS ?;''',
-                (status, user_id, answer, time, score, count_of_scores, num, type))
+                (text, status, user_id, answer, time, score, count_of_scores, num, type))
     conn.commit()
 
 
