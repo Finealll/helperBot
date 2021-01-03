@@ -87,6 +87,7 @@ def delete_task(user_id, token, payload):
         db_work.inc_refuse(user_id)
     else:
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
+    check_returned(user_id, token)
 
 
 def push_task(user_id, token, payload):
@@ -166,8 +167,8 @@ def check_returned(user_id, token):
             db_work.update_status(table, info[0], info[1], user_id, 'in process')
             answer = db_work.get_answer(table, info[0], info[1])
             message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
-                      f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nОтвет: {answer}'
-            vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
+                      f'Причина: не прошло проверку качества!\nЗадание: {"vk.com/doc"+info[2]}\nОтвет: {answer}'
+            vkAPI.send_message(user_id, token, message, attachment="doc"+info[2], keyboard=keyboards.get_main_keyboard(user_id))
 
 
 
