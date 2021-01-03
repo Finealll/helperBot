@@ -2,11 +2,11 @@ import keyboard_generator as kg
 import payloads, names, json, db_work
 
 # Основная клавиатура
-def get_main_keyboard():
+def get_main_keyboard(user_id):
     buttons = []
     buff = False
     for table in names.table_name:
-        if db_work.check_is_exist_status(table, 'in process') or db_work.check_is_exist_status(table, 'returned'):
+        if db_work.check_is_exist_status(table, user_id, 'in process'):
             buff = True
     if buff:
         buttons.append(kg.Button.text(label='Текущее задание', payload=payloads.payloads['get_now_task']))

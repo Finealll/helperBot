@@ -27,7 +27,7 @@ def add_new_user(user_id, token):
 
 
 def go_home(user_id, token):
-    vkAPI.send_message(user_id, token, "Главная:", keyboard=keyboards.get_main_keyboard())
+    vkAPI.send_message(user_id, token, "Главная:", keyboard=keyboards.get_main_keyboard(user_id))
 
 
 # Work with tasks
@@ -63,7 +63,7 @@ def add_task(user_id, token, payload):
     for table in names.table_name:
         if db_work.check_is_exist_status(table, user_id, 'in process'):
             vkAPI.send_message(user_id, token, 'Нельзя взять больше одного задания за раз!\nВыполните текущее задание',
-                               keyboard=keyboards.get_main_keyboard())
+                               keyboard=keyboards.get_main_keyboard(user_id))
             return
 
     if db_work.check_is_added_task(table_name, payload['number'], payload['type_task']):
@@ -76,7 +76,7 @@ def add_task(user_id, token, payload):
         free_numbers = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
         message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
                   f'\nЗадание: {payload["text"]}'
-        vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard())
+        vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
 
 
 def delete_task(user_id, token, payload):
@@ -121,7 +121,7 @@ def get_now_task(user_id, token):
             vkAPI.send_message(user_id, token, message, keyboard=keyboard)
             buff = True
     if not buff:
-        vkAPI.send_message(user_id, token, 'У вас нет заданий!', keyboard=keyboards.get_main_keyboard())
+        vkAPI.send_message(user_id, token, 'У вас нет заданий!', keyboard=keyboards.get_main_keyboard(user_id))
 
 
 def get_faq(user_id, token):
@@ -167,7 +167,7 @@ def check_returned(user_id, token):
             answer = db_work.get_answer(table, info[0], info[1])
             message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
                       f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nОтвет: {answer}'
-            vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard())
+            vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
 
 
 
