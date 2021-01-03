@@ -83,7 +83,7 @@ def delete_task(user_id, token, payload):
     table_name = names.subject_to_table[payload['subject']]
     if db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
         db_work.update_status(table_name, payload['number'], payload['type_task'], '-', 'not complete')
-        vkAPI.send_message(user_id, token, 'Задание успешно отвязано!')
+        vkAPI.send_message(user_id, token, 'Задание успешно отвязано!', keyboard=keyboards.get_main_keyboard(user_id))
         db_work.inc_refuse(user_id)
     else:
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
@@ -140,7 +140,7 @@ def write_attachment(user_id, token, attachment):
     answer = str(attachment['owner_id'])+'_'+str(attachment['id'])
     for table in names.table_name:
         if db_work.check_is_exist_status(table, user_id, 'loading'):
-            info = db_work.get_info_by_status(table, user_id, 'loading')[0]
+            info = db_work.get_info_by_status(table, user_id, 'loading')
             db_work.update_answer(table, info[0], info[1], answer)
 
 

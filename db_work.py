@@ -134,7 +134,7 @@ def get_answer(table: str, num: int, type: int):
 
 def get_info_by_status(table: str, user_id: str, status: str):
     cur.execute(f'''SELECT num_of_task, type_of_task, text FROM {table} WHERE status IS ? and user_id IS ?;''', (status, user_id,))
-    info = cur.fetchall()
+    info = cur.fetchone()
     return info
 
 
