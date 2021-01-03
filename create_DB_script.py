@@ -14,7 +14,8 @@ def create_users():
         first_name TEXT, 
         last_name TEXT, 
         count_all INTEGER, 
-        refuse_all INTEGER
+        refuse_all INTEGER,
+        control_all INTEGER
     );''')
     conn.commit()
 
@@ -31,8 +32,7 @@ def create_tasks(table_name: str):
         answer TEXT,
         datetime TEXT,
         score INTEGER,
-        count_of_scores INTEGER,
-        controlers TEXT,
+        controler TEXT,
         FOREIGN KEY(user_id) REFERENCES users(user_id)
     );''')
     conn.commit()

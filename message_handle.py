@@ -109,6 +109,10 @@ def message_handler(data, token):
             if payload['type'] == 'push_task':
                 bot_methods.push_task(user_id, token, payload)
 
+            # Random nunmer
+            if payload['type'] == 'get_random_number':
+                bot_methods.add_random_number(user_id, token, payload)
+
 
 def event_handler(data, token):
     return 1

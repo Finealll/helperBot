@@ -7,7 +7,7 @@ cur = conn.cursor()
 # add users
 def add_user(user_id: str, first_name: str, last_name: str):
     if not check_user_in_users(user_id):
-        cur.execute('''INSERT INTO users VALUES(?,?,?,?,?);''', (user_id, first_name, last_name, 0, 0))
+        cur.execute('''INSERT INTO users VALUES(?,?,?,?,?,?);''', (user_id, first_name, last_name, 0, 0, 0))
         conn.commit()
         return 1
     else:
@@ -24,18 +24,14 @@ def add_controlers(user_id: str, subject: str):
 
 
 def add_field(table: str, num: int, type: int, text: str = '', user_id: str = "-", status: str = "not complete", answer: str = "-", time: str = datetime.datetime.utcnow(),
-                 score: int = 0, count_of_scores: int = 0, controlers = ''):
-    cur.execute(f'''INSERT INTO {table} VALUES(?,?,?,?,?,?,?,?,?,?);''', (num, type, text, user_id, status, answer, time, score, count_of_scores, controlers))
+                 score: int = 0, controler = ''):
+    cur.execute(f'''INSERT INTO {table} VALUES(?,?,?,?,?,?,?,?,?);''', (num, type, text, user_id, status, answer, time, score, controler))
     conn.commit()
 
 # delete role
-def del_role(user_id: str, subject: str):
-    if check_controler_in_controlers(user_id, subject):
-        cur.execute('''DELETE FROM controlers WHERE user_id=? AND subject=?;''', (user_id, subject))
-        conn.commit()
-        return 1
-    else:
-        return 0
+def del_table(table: str):
+    cur.execute(f'''DELETE FROM {table};''')
+    conn.commit()
 
 
 # update table

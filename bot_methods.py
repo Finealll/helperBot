@@ -1,4 +1,4 @@
-import vkAPI, keyboards, admin_db, db_work, names
+import vkAPI, keyboards, admin_db, db_work, names, random
 import json
 
 
@@ -77,6 +77,26 @@ def add_task(user_id, token, payload):
         message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
                   f'\nЗадание: {payload["text"]}'
         vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
+
+
+def add_random_number(user_id, token, payload):
+    table_name = names.subject_to_table[payload['subject']]
+    for table in names.table_name:
+        if db_work.check_is_exist_status(table, user_id, 'in process'):
+            vkAPI.send_message(user_id, token, 'Нельзя взять больше одного задания за раз!\nВыполните текущее задание',
+                               keyboard=keyboards.get_main_keyboard(user_id))
+            return
+    free_numbers1 = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
+    index = random.randint(0, len(free_numbers1))
+
+    if db_work.check_is_added_task(table_name, free_numbers1[index][0], payload['type_task']):
+        add_random_number(user_id, token, payload)
+    else:
+        db_work.update_status(table_name, free_numbers1[index][0], payload['type_task'], user_id, 'in process')
+        message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
+                  f'\nЗадание: {free_numbers1[index][1]}'
+        vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
+
 
 
 def delete_task(user_id, token, payload):
@@ -177,5 +197,7 @@ def go_home_without_saving(user_id, token, payload):
     db_work.update_status(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], user_id, 'in process')
     db_work.update_answer(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'])
     go_home(user_id, token)
+
+
 
 

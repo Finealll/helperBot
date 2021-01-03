@@ -161,4 +161,10 @@ payloads = {
         "num": 0,
         "type_task": 0,
     },
+    #Получение рандомного номера
+    "get_random_number": {
+        "type": "get_random_number",
+        "subject": "",
+        "type_task": 0,
+    },
 }
