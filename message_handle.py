@@ -14,6 +14,8 @@ def message_handler(data, token):
         bot_methods.admin_get_users(user_id, token)
     elif data['object']['message']['text'] == 'admin_addme!':
         bot_methods.add_new_user(user_id, token)
+    elif data['object']['message']['text'] == 'Старт':
+        bot_methods.add_new_user(user_id, token)
 
 
     if len(data['object']['message']['attachments']) > 0:
@@ -39,7 +41,7 @@ def message_handler(data, token):
                 return
 
             if bot_methods.check_dialog(user_id, token):
-                return 
+                return
 
             # open keyboards
             if payload['type'] == 'open_keyboard':

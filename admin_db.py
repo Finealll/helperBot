@@ -29,4 +29,3 @@ def GetUsers():
     users = cur.fetchall()
     return users
 
-
