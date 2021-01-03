@@ -9,7 +9,7 @@ def get_main_keyboard():
         if db_work.check_is_exist_status(table, 'in process') or db_work.check_is_exist_status(table, 'returned'):
             buff = True
     if buff:
-        buttons.append(kg.Button.text(label='Текущее задание', payload=payloads.payloads['get_now_task_list']))
+        buttons.append(kg.Button.text(label='Текущее задание', payload=payloads.payloads['get_now_task']))
     else:
         buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
     #buttons.append(kg.Button.text(label='Проверка качества', payload=payloads.payloads['get_roles_list']))
