@@ -1,4 +1,4 @@
-import vkAPI, keyboards, admin_db, db_work, names, random
+import vkAPI, keyboards, admin_db, db_work, names, random, os, requests, VKsettings
 import json
 
 
@@ -74,8 +74,9 @@ def add_task(user_id, token, payload):
     else:
         db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'in process')
         free_numbers = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
+        text = db_work.get_text(table_name, payload["number"], payload['type_task'])
         message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
-                  f'\nЗадание: {payload["text"]}'
+                  f'\nЗадание: {text}'
         vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
 
 
@@ -161,7 +162,22 @@ def check_dialog(user_id, token):
 
 
 def write_attachment(user_id, token, attachment):
-    answer = str('doc'+attachment['owner_id'])+'_'+str(attachment['id']+'_'+attachment['access_key'])
+    url = attachment['url']
+    response = requests.get(url)
+
+    name = str(random.randint(0, 9999999)) + '.docx'
+    file = open(name, 'wb')
+    file.write(response.content)
+    file.close()
+
+    upload_url = vkAPI.api.docs.getWallUploadServer(access_token=VKsettings.token, group_id=names.id_community)[
+        'upload_url']
+    filestr = requests.post(upload_url, files={'file': open(name, 'rb')}).json()['file']
+    file.close()
+    os.remove(name)
+
+    response = vkAPI.api.docs.save(access_token=VKsettings.token, file=filestr)
+    answer = 'doc'+str(response['doc']['owner_id']) + '_' + response['doc']['id']
     for table in names.table_name:
         if db_work.check_is_exist_status(table, user_id, 'loading'):
             info = db_work.get_info_by_status(table, user_id, 'loading')

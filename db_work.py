@@ -128,6 +128,12 @@ def get_answer(table: str, num: int, type: int):
     return status
 
 
+def get_text(table: str, num: int, type: int):
+    cur.execute(f'''SELECT text FROM {table} WHERE num_of_task IS ? AND type_of_task IS ?;''', (num, type,))
+    text = cur.fetchone()[0]
+    return text
+
+
 def get_info_by_status(table: str, user_id: str, status: str):
     cur.execute(f'''SELECT num_of_task, type_of_task, text FROM {table} WHERE status IS ? and user_id IS ?;''', (status, user_id,))
     info = cur.fetchone()

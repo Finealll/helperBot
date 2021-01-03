@@ -97,7 +97,6 @@ payloads = {
     "add_task": {
         "type": "add_task",
         "subject": "",
-        "text": "",
         "number": 0,
         "type_task": 0,
     },
