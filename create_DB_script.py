@@ -32,6 +32,7 @@ def create_tasks(table_name: str):
         datetime TEXT,
         score INTEGER,
         count_of_scores INTEGER,
+        controlers TEXT,
         FOREIGN KEY(user_id) REFERENCES users(user_id)
     );''')
     conn.commit()

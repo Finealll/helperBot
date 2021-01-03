@@ -166,8 +166,9 @@ def check_returned(user_id, token):
             info = db_work.get_info_by_status(table, user_id, 'returned')
             db_work.update_status(table, info[0], info[1], user_id, 'in process')
             answer = db_work.get_answer(table, info[0], info[1])
+            db_work.update_answer(table,info[0], info[1])
             message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
-                      f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nОтвет: {"vk.com/doc"+answer}'
+                      f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nВаш ответ: {"vk.com/doc"+answer}'
             vkAPI.send_message(user_id, token, message, attachment="doc"+answer, keyboard=keyboards.get_main_keyboard(user_id))
 
 

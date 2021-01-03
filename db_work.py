@@ -23,9 +23,9 @@ def add_controlers(user_id: str, subject: str):
         return 0
 
 
-def add_field(table: str, num: int, type: int, text: str = '', user_id: str = "-", status: str = "not complete", answer: str = "-", time: str = datetime.datetime.now(),
-                 score: int = 0, count_of_scores: int = 0):
-    cur.execute(f'''INSERT INTO {table} VALUES(?,?,?,?,?,?,?,?,?);''', (num, type, text, user_id, status, answer, time, score, count_of_scores))
+def add_field(table: str, num: int, type: int, text: str = '', user_id: str = "-", status: str = "not complete", answer: str = "-", time: str = datetime.datetime.utcnow(),
+                 score: int = 0, count_of_scores: int = 0, controlers = ''):
+    cur.execute(f'''INSERT INTO {table} VALUES(?,?,?,?,?,?,?,?,?,?);''', (num, type, text, user_id, status, answer, time, score, count_of_scores, controlers))
     conn.commit()
 
 # delete role
@@ -47,7 +47,7 @@ def update_status(table: str, num: int, type: int, user_id: str, status: str = "
 
 
 def update_answer(table: str, num: int, type: int, answer: str = "-"):
-    cur.execute(f'''UPDATE {table} SET answer = ?, datetime = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (answer, datetime.datetime.now(), num, type))
+    cur.execute(f'''UPDATE {table} SET answer = ?, datetime = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (answer, datetime.datetime.utcnow(), num, type))
     conn.commit()
 
 
