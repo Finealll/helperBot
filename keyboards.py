@@ -17,13 +17,14 @@ def get_subjects_keyboard():
     buttons = []
     buttons.append(kg.Button.text(label=names.name_of_subject[0], payload=payloads.payloads['get_progers_types']))
     buttons.append(kg.Button.text(label=names.name_of_subject[1], payload=payloads.payloads['get_eltech_types']))
-    buttons.append(kg.Button.text(label=names.name_of_subject[3], payload=payloads.payloads['get_math_types']))
-    buttons.append(kg.Button.text(label=names.name_of_subject[4], payload=payloads.payloads['get_physics_types']))
+    buttons.append(kg.Button.text(label=names.name_of_subject[2], payload=payloads.payloads['get_math_types']))
+    buttons.append(kg.Button.text(label=names.name_of_subject[3], payload=payloads.payloads['get_physics_types']))
     buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
     generator = kg.KeyBoard()
     generator.load(buttons)
     kb = generator.get()
     return kb
+
 
 
 def get_subjects_types_keyboard(type1, type2, type3):

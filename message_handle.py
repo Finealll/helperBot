@@ -39,7 +39,7 @@ def message_handler(data, token):
                 return
 
             if bot_methods.check_dialog(user_id, token):
-                return
+                return 
 
             # open keyboards
             if payload['type'] == 'open_keyboard':
