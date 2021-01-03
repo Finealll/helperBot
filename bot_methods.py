@@ -93,7 +93,7 @@ def add_random_number(user_id, token, payload):
         add_random_number(user_id, token, payload)
     else:
         db_work.update_status(table_name, free_numbers1[index][0], payload['type_task'], user_id, 'in process')
-        message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
+        message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{free_numbers1[index][0]}' \
                   f'\nЗадание: {free_numbers1[index][1]}'
         vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
 
