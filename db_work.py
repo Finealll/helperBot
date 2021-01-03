@@ -39,16 +39,10 @@ def del_role(user_id: str, subject: str):
 
 
 # update table
-def update_field(table: str, num: int, type: int, text: str = '', status: str = "not complete", user_id: str = "-", answer: str = "-", time: str = datetime.datetime.now(),
-                 score: int = 0, count_of_scores: int = 0):
-    cur.execute(f'''UPDATE {table} SET text = ?, status = ?, user_id = ?, answer = ?,
-     datetime = ?, score = ?, count_of_scores = ? WHERE num_of_task IS ? AND type_of_task IS ?;''',
-                (text, status, user_id, answer, time, score, count_of_scores, num, type))
-    conn.commit()
 
-
-def update_status(table: str, num: int, type: int, status: str = "not complete"):
-    cur.execute(f'''UPDATE {table} SET status = ?, datetime = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (status, datetime.datetime.now(), num, type))
+def update_status(table: str, num: int, type: int, user_id: str, status: str = "not complete"):
+    cur.execute(f'''UPDATE {table} SET status = ?, datetime = ?, user_id = ? WHERE num_of_task IS ? AND type_of_task IS ?;''',
+                (status, datetime.datetime.now(), user_id, num, type))
     conn.commit()
 
 

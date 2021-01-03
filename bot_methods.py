@@ -72,7 +72,7 @@ def add_task(user_id, token, payload):
                            keyboard=keyboards.get_free_numbers_keyboard(payload['subject'], free_numbers,
                                                                         payload['type_task']))
     else:
-        db_work.update_field(table_name, payload['number'], payload['type_task'], 'in process', user_id)
+        db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'in process')
         free_numbers = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
         message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"])}. №{payload["number"]}' \
                   f'\nЗадание: {payload["text"]}'
@@ -84,7 +84,7 @@ def add_task(user_id, token, payload):
 def delete_task(user_id, token, payload):
     table_name = names.subject_to_table[payload['subject']]
     if db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
-        db_work.update_field(table_name, payload['number'], payload['type_task'])
+        db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'not complete')
         vkAPI.send_message(user_id, token, 'Задание успешно отвязано!')
         db_work.inc_refuse(user_id)
     else:
@@ -96,7 +96,7 @@ def push_task(user_id, token, payload):
     if not db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
         return
-    db_work.update_status(table_name, payload['number'], payload['type_task'], 'loading')
+    db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'loading')
     message = "Пришлите в диалог ответ на вопрос в формате .docx / .doc, затем нажмите кнопку отправить."
     keyboard = keyboards.get_push_file_keyboard(payload['subject'], payload['number'], payload['type_task'])
     vkAPI.send_message(user_id, token, message, keyboard=keyboard)
@@ -152,15 +152,15 @@ def send_file(user_id, token, payload):
         vkAPI.send_message(user_id, token, "Отправьте документ в чат перед нажатием на кнопку!")
         return
     else:
-        db_work.update_status(table_name, payload['num'], payload['type_task'], 'complete')
+        db_work.update_status(table_name, payload['num'], payload['type_task'], user_id, 'complete')
         db_work.inc_do(user_id)
         go_home(user_id, token)
 
 
 
 def go_home_without_saving(user_id, token, payload):
-    db_work.update_field(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], 'in process',
-                         user_id, '-')
+    db_work.update_status(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], user_id, 'in process')
+    db_work.update_answer(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'])
     go_home(user_id, token)
 
 
