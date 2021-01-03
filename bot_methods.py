@@ -56,29 +56,6 @@ def get_free_progers_numbers(user_id, token, table_name, type):
     vkAPI.send_message(user_id, token, "Выберите задания", keyboard=keyboard)
 
 
-# Work with roles
-def get_roles_list(user_id, token):
-    roles = db_work.get_roles_in_roles(user_id)
-    vkAPI.send_message(user_id, token, 'Роли:', keyboard=keyboards.get_roles_keyboard(roles))
-
-
-def change_role(user_id, token, payload):
-    availability = db_work.check_roles_in_roles(user_id, payload['role'])
-    if payload['do'] == 'add':
-        if availability:
-            message = "У вас уже есть эта роль!"
-        elif not availability:
-            db_work.add_role(user_id, payload['role'])
-            message = "Роль " + payload['role'] + " добавлена"
-    elif payload['do'] == 'delete':
-        if not availability:
-            message = "У вас нет этой роли!"
-        elif availability:
-            db_work.del_role(user_id, payload['role'])
-            message = "Роль " + payload['role'] + " удалена"
-    roles = db_work.get_roles_in_roles(user_id)
-    vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_roles_keyboard(roles))
-
 
 # Work with tasks
 def add_task(user_id, token, payload):

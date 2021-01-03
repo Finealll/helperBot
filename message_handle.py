@@ -83,15 +83,13 @@ def message_handler(data, token):
                     bot_methods.get_free_progers_numbers(user_id, token, names.table_name[3], 2)
                 elif payload['name'] == 'get_physics_type3':
                     bot_methods.get_free_progers_numbers(user_id, token, names.table_name[3], 3)
-                # Переход к выбору ролей
-                elif payload['name'] == 'get_roles_list':
-                    bot_methods.get_roles_list(user_id, token)
+
 
             # send info message
             elif payload['type'] == 'send_info_message':
                 # Отправка сообщения с текущими заданиями
-                if payload['name'] == 'get_now_tasks_list':
-                    bot_methods.get_now_tasks(user_id, token)
+                if payload['name'] == 'get_now_task':
+                    bot_methods.get_now_task(user_id, token)
                     # Отправка faq
                 elif payload['name'] == 'get_faq':
                     bot_methods.get_faq(user_id, token)

@@ -5,7 +5,7 @@ payloads = {
         "type": "open_keyboard",
         "name": "get_main_keyboard"
     },
-    "get_tasks_list": {     #Открытие списка предметов по скилам
+    "get_tasks_list": {     #Открытие списка предметов
         "type": "open_keyboard",
         "name": "get_tasks_list"
     },

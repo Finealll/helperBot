@@ -30,5 +30,3 @@ def GetUsers():
     return users
 
 
-
-add_tables()

@@ -13,31 +13,6 @@ def get_main_keyboard():
     kb = generator.get()
     return kb
 
-#клава для сообщения с ролями       -deprecated
-def get_roles_keyboard(roles_now):
-    buttons = []
-    if names.roles[4] in roles_now:
-        payload = dict(payloads.payloads['change_role'])
-        payload['role'] = names.roles[4]
-        payload['do'] = 'delete'
-        buttons.append(kg.Button.text(label='Удалить роль \"' + names.roles[4] + '\"', payload=payload, color='negative'))
-    else:
-        for role in names.roles:
-            payload = dict(payloads.payloads['change_role'])
-            payload['role'] = role
-            if role in roles_now:
-                payload['do'] = 'delete'
-                buttons.append(kg.Button.text(label='Удалить роль \"'+role+'\"', payload=payload, color='negative'))
-            else:
-                payload['do'] = 'add'
-                buttons.append(kg.Button.text(label='Добавить роль \"'+role+'\"', payload=payload, color='positive'))
-    buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
-    generator = kg.KeyBoard()
-    generator.load(buttons)
-    kb = generator.get()
-    return kb
-
-
 def get_subjects_keyboard():
     buttons = []
     buttons.append(kg.Button.text(label=names.name_of_subject[0], payload=payloads.payloads['get_progers_types']))
