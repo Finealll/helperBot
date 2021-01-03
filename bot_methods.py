@@ -32,13 +32,8 @@ def go_home(user_id, token):
 
 # Work with tasks
 def get_task_list(user_id, token):
-    roles = db_work.get_roles_in_roles(user_id)
-    if len(roles) == 0:
-        vkAPI.send_message(user_id, token, 'У вас нет ролей!\nДобавьте себе роль, станьте человеком!',
-                           keyboard=keyboards.get_roles_keyboard(roles))
-    else:
-        vkAPI.send_message(user_id, token, 'Выберите предмет:',
-                           keyboard=keyboards.get_subjects_keyboard(roles))
+    vkAPI.send_message(user_id, token, 'Выберите предмет:',
+                       keyboard=keyboards.get_subjects_keyboard())
 
 
 def get_subject_types(user_id, token, payload):

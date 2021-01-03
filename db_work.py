@@ -1,4 +1,4 @@
-import sqlite3, db_settings
+import sqlite3, db_settings, datetime
 
 conn = sqlite3.connect(db_settings.patch)
 cur = conn.cursor()
@@ -14,18 +14,18 @@ def add_user(user_id: str, first_name: str, last_name: str):
         return 0
 
 # add roles
-def add_role(user_id: str, role: str):
-    if not check_roles_in_roles(user_id, role):
-        cur.execute('''INSERT INTO roles VALUES(?,?);''', (role, user_id))
+def add_controlers(user_id: str, subject: str):
+    if not check_controler_in_controlers(user_id, subject):
+        cur.execute('''INSERT INTO controlers VALUES(?,?);''', (subject, user_id))
         conn.commit()
         return 1
     else:
         return 0
 
 # delete role
-def del_role(user_id: str, role: str):
-    if check_roles_in_roles(user_id, role):
-        cur.execute('''DELETE FROM roles WHERE user_id=? AND role=?;''', (user_id, role))
+def del_role(user_id: str, subject: str):
+    if check_controler_in_controlers(user_id, subject):
+        cur.execute('''DELETE FROM controlers WHERE user_id=? AND subject=?;''', (user_id, subject))
         conn.commit()
         return 1
     else:
@@ -33,18 +33,21 @@ def del_role(user_id: str, role: str):
 
 
 # update table
-def update_field(table: str, num: int, type: int, status: str = "not complete", user_id: str = "-", answer: str = "-"):
-    cur.execute(f'''UPDATE {table} SET status = ?, user_id = ?, answer = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (status, user_id, answer, num, type))
+def update_field(table: str, num: int, type: int, status: str = "not complete", user_id: str = "-", answer: str = "-", time: str = datetime.datetime.now(),
+                 score: int = 0, count_of_scores: int = 0):
+    cur.execute(f'''UPDATE {table} SET status = ?, user_id = ?, answer = ?,
+     datetime = ?, score = ?, count_of_scores = ? WHERE num_of_task IS ? AND type_of_task IS ?;''',
+                (status, user_id, answer, time, score, count_of_scores, num, type))
     conn.commit()
 
 
 def update_status(table: str, num: int, type: int, status: str = "not complete"):
-    cur.execute(f'''UPDATE {table} SET status = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (status, num, type))
+    cur.execute(f'''UPDATE {table} SET status = ?, datetime = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (status, datetime.datetime.now(), num, type))
     conn.commit()
 
 
 def update_answer(table: str, num: int, type: int, answer: str = "-"):
-    cur.execute(f'''UPDATE {table} SET answer = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (answer, num, type))
+    cur.execute(f'''UPDATE {table} SET answer = ?, datetime = ? WHERE num_of_task IS ? AND type_of_task IS ?;''', (answer, datetime.datetime.now(), num, type))
     conn.commit()
 
 
@@ -54,8 +57,8 @@ def check_user_in_users(user_id):
     return False if cur.fetchone() == None else True
 
 
-def check_roles_in_roles(user_id: str, role: str):
-    cur.execute('''SELECT * FROM roles WHERE user_id=? AND role=?;''', (user_id, role))
+def check_controler_in_controlers(user_id: str, subject: str):
+    cur.execute('''SELECT * FROM controlers WHERE user_id=? AND subject=?;''', (user_id, subject))
     return False if cur.fetchone() == None else True
 
 
@@ -101,8 +104,8 @@ def get_free_numbers(table: str, type: int):
     return free_numbers
 
 
-def get_roles_in_roles(user_id: str):
-    cur.execute('''SELECT role FROM roles WHERE user_id=?;''', (user_id,))
+def get_controlers_in_controlers(user_id: str):
+    cur.execute('''SELECT subject FROM controlers WHERE user_id=?;''', (user_id,))
     buff = cur.fetchall()
     roles = []
     for item in buff:

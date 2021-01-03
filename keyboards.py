@@ -5,15 +5,15 @@ import payloads, names, json
 def get_main_keyboard():
     buttons = []
     buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
-    buttons.append(kg.Button.text(label='Мои задания', payload=payloads.payloads['get_now_tasks_list']))
-    buttons.append(kg.Button.text(label='Роли', payload=payloads.payloads['get_roles_list']))
+    buttons.append(kg.Button.text(label='Текущее задание', payload=payloads.payloads['get_now_tasks_list']))
+    buttons.append(kg.Button.text(label='Проверка качества', payload=payloads.payloads['get_roles_list']))
     buttons.append(kg.Button.text(label='FAQ', payload=payloads.payloads['get_faq']))
     generator = kg.KeyBoard(False, False, False)
     generator.load(buttons)
     kb = generator.get()
     return kb
 
-#Inline клава для сообщения с ролями
+#клава для сообщения с ролями       -deprecated
 def get_roles_keyboard(roles_now):
     buttons = []
     if names.roles[4] in roles_now:
@@ -38,20 +38,12 @@ def get_roles_keyboard(roles_now):
     return kb
 
 
-def get_subjects_keyboard(roles_now):
-    pre_buttons = {
-        names.roles[0]: kg.Button.text(label='Системка', payload=payloads.payloads['get_progers_types']),
-        names.roles[1]: kg.Button.text(label='Элтех', payload=payloads.payloads['get_eltech_types']),
-        names.roles[2]: kg.Button.text(label='Дискретка', payload=payloads.payloads['get_math_types']),
-        names.roles[3]: kg.Button.text(label='Физика', payload=payloads.payloads['get_physics_types']),
-    }
+def get_subjects_keyboard():
     buttons = []
-    if names.roles[4] in roles_now:
-        for role in names.roles[:-1]:
-            buttons.append(pre_buttons[role])
-    else:
-        for role in roles_now:
-            buttons.append(pre_buttons[role])
+    buttons.append(kg.Button.text(label=names.name_of_subject[0], payload=payloads.payloads['get_progers_types']))
+    buttons.append(kg.Button.text(label=names.name_of_subject[1], payload=payloads.payloads['get_eltech_types']))
+    buttons.append(kg.Button.text(label=names.name_of_subject[3], payload=payloads.payloads['get_math_types']))
+    buttons.append(kg.Button.text(label=names.name_of_subject[4], payload=payloads.payloads['get_physics_types']))
     buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
     generator = kg.KeyBoard()
     generator.load(buttons)
