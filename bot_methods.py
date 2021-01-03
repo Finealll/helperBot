@@ -120,7 +120,7 @@ def push_task(user_id, token, payload):
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
         return
     db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'loading')
-    message = "Пришлите в диалог ответ на вопрос в формате .docx / .doc, затем нажмите кнопку отправить."
+    message = "Пришлите в диалог ответ на вопрос в формате .docx, затем нажмите кнопку отправить."
     keyboard = keyboards.get_push_file_keyboard(payload['subject'], payload['number'], payload['type_task'])
     vkAPI.send_message(user_id, token, message, keyboard=keyboard)
 
@@ -165,7 +165,7 @@ def write_attachment(user_id, token, attachment):
     url = attachment['url']
     response = requests.get(url)
 
-    name = str(random.randint(0, 9999999)) + '.docx'
+    name = str(random.randint(0, 999999999)) + '.docx'
     file = open(name, 'wb')
     file.write(response.content)
     file.close()
@@ -177,7 +177,7 @@ def write_attachment(user_id, token, attachment):
     os.remove(name)
 
     response = vkAPI.api.docs.save(access_token=VKsettings.token, file=filestr)
-    answer = 'doc'+str(response['doc']['owner_id']) + '_' + response['doc']['id']
+    answer = 'doc'+str(response['doc']['owner_id']) + '_' + str(response['doc']['id'])
     for table in names.table_name:
         if db_work.check_is_exist_status(table, user_id, 'loading'):
             info = db_work.get_info_by_status(table, user_id, 'loading')
