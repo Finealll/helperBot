@@ -11,8 +11,8 @@ def get_main_keyboard():
     if buff:
         buttons.append(kg.Button.text(label='Текущее задание', payload=payloads.payloads['get_now_tasks_list']))
     else:
-        buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
-    buttons.append(kg.Button.text(label='Проверка качества', payload=payloads.payloads['get_roles_list']))
+        buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_task_list']))
+    buttons.append(kg.Button.text(label='Проверка качества')
     buttons.append(kg.Button.text(label='FAQ', payload=payloads.payloads['get_faq']))
     generator = kg.KeyBoard(False, False, False)
     generator.load(buttons)
@@ -85,6 +85,7 @@ def get_now_task_keyboard(subject, num, type):
     payload['number'] = num
     payload['type_task'] = type
     buttons.append(kg.Button.text(label='Отказаться', payload=payload, color='negative'))
+    buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
     generator = kg.KeyBoard(one_line=True)
     generator.load(buttons)
     kb = generator.get()
