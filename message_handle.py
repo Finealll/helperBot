@@ -1,4 +1,4 @@
-import vkAPI, bot_methods, names
+import vkAPI, bot_methods, names, admin_db
 import json
 
 def message_handler(data, token):
@@ -14,6 +14,8 @@ def message_handler(data, token):
         bot_methods.admin_get_users(user_id, token)
     elif data['object']['message']['text'] == 'admin_addme!':
         bot_methods.add_new_user(user_id, token)
+    elif data['object']['message']['text'] == 'admin_cldbs!':
+        admin_db.get_clear_tables()
     elif data['object']['message']['text'] == 'Начать':
         bot_methods.add_new_user(user_id, token)
 
