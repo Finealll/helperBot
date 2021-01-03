@@ -14,7 +14,7 @@ def message_handler(data, token):
         bot_methods.admin_get_users(user_id, token)
     elif data['object']['message']['text'] == 'admin_addme!':
         bot_methods.add_new_user(user_id, token)
-    elif data['object']['message']['text'] == 'Старт':
+    elif data['object']['message']['text'] == 'Начать':
         bot_methods.add_new_user(user_id, token)
 
 
@@ -96,11 +96,6 @@ def message_handler(data, token):
                 elif payload['name'] == 'get_faq':
                     bot_methods.get_faq(user_id, token)
 
-            # change user data
-            elif payload['type'] == 'change_info':
-                # Изменение ролей
-                if payload['name'] == 'change_role':
-                    bot_methods.change_role(user_id, token, payload)
 
             # Add task
             if payload['type'] == 'add_task':

@@ -115,9 +115,9 @@ def get_controlers_in_controlers(user_id: str):
         roles.append(item[0])
     return roles
 
-def get_now_tasks(table: str, user_id: str):
-    cur.execute(f'''SELECT num_of_task, type_of_task FROM {table} WHERE user_id IS ? AND status IS ?;''', (user_id, 'in process',))
-    return cur.fetchall()
+def get_now_task(table: str, user_id: str):
+    cur.execute(f'''SELECT num_of_task, type_of_task, text FROM {table} WHERE user_id IS ? AND status IS ?;''', (user_id, 'in process',))
+    return cur.fetchone()
 
 
 def get_status(table: str, num: int, type: int):

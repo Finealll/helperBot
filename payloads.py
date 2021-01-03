@@ -128,9 +128,9 @@ payloads = {
         "type_task": 0,
     },
     #Отправка сообщений с данными
-    "get_now_tasks_list": {  # Открытие своих задач
+    "get_now_task": {  # Открытие своих задач
         "type": "send_info_message",
-        "name": "get_now_tasks_list"
+        "name": "get_now_task"
     },
     "get_faq": {    # Отправка faq
         "type": "send_info_message",

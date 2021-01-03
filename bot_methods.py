@@ -74,11 +74,9 @@ def add_task(user_id, token, payload):
     else:
         db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'in process')
         free_numbers = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
-        message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"])}. №{payload["number"]}' \
+        message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
                   f'\nЗадание: {payload["text"]}'
-        vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_free_numbers_keyboard(payload['subject'],
-                                                                                                 free_numbers,
-                                                                                                 payload['type_task']))
+        vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard())
 
 
 def delete_task(user_id, token, payload):
@@ -112,17 +110,18 @@ def get_type_question(type:int):
         return 'задача'
 
 
-def get_now_tasks(user_id, token):
-    count = 0
-    for i in range(len(names.table_name)):
-        arr = db_work.get_now_tasks(names.table_name[i], user_id)
-        for item in arr:
-            message = f'{names.name_of_subject[i]}. {str(get_type_question(item[1])).capitalize()}. Номер {item[0]}'
-            keyboard = keyboards.get_now_task_keyboard(names.name_of_subject[i], item[0], item[1])
+def get_now_task(user_id, token):
+    buff = False
+    for table in names.table_name:
+        if db_work.check_is_exist_status(table, 'in process'):
+            task = db_work.get_now_task(table, user_id)
+            message = f'Текущее задание:\n{names.table_to_subject[table]}. {get_type_question(task[1]).capitalize()}. №{task[0]}' \
+                      f'\nЗадание: {task[2]}'
+            keyboard = keyboards.get_now_task_keyboard(names.table_to_subject[table], task[0], task[1])
             vkAPI.send_message(user_id, token, message, keyboard=keyboard)
-            count += 1
-    if count == 0:
-        vkAPI.send_message(user_id, token, 'У вас нет заданий!')
+            buff = True
+    if not buff:
+        vkAPI.send_message(user_id, token, 'У вас нет заданий!', keyboard=keyboards.get_main_keyboard())
 
 
 def get_faq(user_id, token):

@@ -1,11 +1,17 @@
 import keyboard_generator as kg
-import payloads, names, json
+import payloads, names, json, db_work
 
 # Основная клавиатура
 def get_main_keyboard():
     buttons = []
-    buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
-    buttons.append(kg.Button.text(label='Текущее задание', payload=payloads.payloads['get_now_tasks_list']))
+    buff = False
+    for table in names.table_name:
+        if db_work.check_is_exist_status(table, 'in process') or db_work.check_is_exist_status(table, 'returned'):
+            buff = True
+    if buff:
+        buttons.append(kg.Button.text(label='Текущее задание', payload=payloads.payloads['get_now_tasks_list']))
+    else:
+        buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
     buttons.append(kg.Button.text(label='Проверка качества', payload=payloads.payloads['get_roles_list']))
     buttons.append(kg.Button.text(label='FAQ', payload=payloads.payloads['get_faq']))
     generator = kg.KeyBoard(False, False, False)
@@ -79,7 +85,7 @@ def get_now_task_keyboard(subject, num, type):
     payload['number'] = num
     payload['type_task'] = type
     buttons.append(kg.Button.text(label='Отказаться', payload=payload, color='negative'))
-    generator = kg.KeyBoard(inline=True, one_line=True)
+    generator = kg.KeyBoard(one_line=True)
     generator.load(buttons)
     kb = generator.get()
     return kb
