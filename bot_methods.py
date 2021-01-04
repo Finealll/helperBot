@@ -28,6 +28,7 @@ def add_new_user(user_id, token):
 
 def go_home(user_id, token):
     vkAPI.send_message(user_id, token, "Главная:", keyboard=keyboards.get_main_keyboard(user_id))
+    check_returned(user_id, token)
 
 
 # Work with tasks
@@ -229,9 +230,15 @@ def check_returned(user_id, token):
             db_work.update_status(table, info[0], info[1], user_id, 'in process')
             answer = db_work.get_answer(table, info[0], info[1])
             db_work.update_answer(table, info[0], info[1])
-            message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
-                      f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nВаш ответ: {"vk.com/"+answer}'
-            vkAPI.send_message(user_id, token, message, attachment=answer, keyboard=keyboards.get_main_keyboard(user_id))
+            if info[1] == 3:
+                message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
+                          f'Причина: не прошло проверку качества!\nЗадание: во вложении\nВаш ответ: во вложении'
+                vkAPI.send_message(user_id, token, message, attachment=str(answer+','+info[2]),
+                                   keyboard=keyboards.get_main_keyboard(user_id))
+            else:
+                message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
+                          f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nВаш ответ: во вложении'
+                vkAPI.send_message(user_id, token, message, attachment=answer, keyboard=keyboards.get_main_keyboard(user_id))
 
 
 
@@ -259,3 +266,54 @@ def get_profile(user_id, token):
     vkAPI.send_message(user_id, token, message)
 
 
+def get_quality_num(user_id, token, payload):
+    subject = payload['subject']
+    tasks = db_work.get_tasks_for_control(names.subject_to_table[subject])
+    if len(tasks) > 0:
+        num = random.randint(0, len(tasks)-1)
+        user = vkAPI.get_user_info(tasks[num][3], token)
+        db_work.update_score(names.subject_to_table[subject], tasks[num][0], tasks[num][1], 3)
+        keyboard = keyboards.get_quality_number_keyboard(subject, tasks[num][0], tasks[num][1])
+        if tasks[num][1] == 3:
+            message = f"Проверьте качество выполнения:\n{subject}. {get_type_question(tasks[num][1])} №{tasks[num][0]}\n" \
+                      f"Исполнитель: {user[1]} {user[0]}\n" \
+                      f"Задание: во вложении\n" \
+                      f"Ответ: во вложении"
+            vkAPI.send_message(user_id, token, message, attachment=str(tasks[num][4]+','+tasks[num][2]), keyboard=keyboard)
+        else:
+            message = f"Проверьте качество выполнения:\n{subject}. {get_type_question(tasks[num][1])} №{tasks[num][0]}\n" \
+                      f"Исполнитель: {user[1]} {user[0]}\n" \
+                      f"Задание: {tasks[num][2]}\n" \
+                      f"Ответ: во вложении"
+            vkAPI.send_message(user_id, token, message, attachment=tasks[num][4], keyboard=keyboard)
+    else:
+        vkAPI.send_message(user_id, token, 'Увы, все задания для проверки качества уже разобрали!',
+                           keyboard=keyboards.get_main_keyboard(user_id))
+
+
+def change_quality_score(user_id, token, payload):
+    db_work.update_score(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], payload['score'])
+    if payload['score'] == 1:
+        buff = True
+        table = names.subject_to_table[payload['subject']]
+        user = db_work.get_user_id_in_task(table, payload['num'], payload['type_task'])
+        db_work.update_status(table, payload['num'], payload['type_task'], user, 'returned')
+        for _table in names.table_name:
+            if db_work.check_is_exist_status(_table, user, 'in process') or db_work.check_is_exist_status(_table, user, 'loading'):
+                info = vkAPI.get_user_info(user_id, token)
+                message = f"Привет!\nТвое задание {payload['subject']}. {get_type_question(payload['type_task'])} №{payload['num']}\n" \
+                          f"было отклонено экспертом и добавлено тебе в очередь!" \
+                          f"Проверяющий: {info[1]} {info[0]}"
+                vkAPI.send_message(user, token, message)
+                buff = False
+                break
+        if buff:
+            check_returned(user, token)
+
+
+
+
+
+def on_main_from_quality(user_id, token, payload):
+    db_work.update_score(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], 0)
+    go_home(user_id, token)

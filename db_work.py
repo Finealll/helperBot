@@ -52,6 +52,12 @@ def update_date(table: str, num: int, type: int, time: str = datetime.datetime.n
                 (time, num, type))
     conn.commit()
 
+
+def update_score(table: str, num: int, type: int, score: int):
+    cur.execute(f'''UPDATE {table} SET score = ? WHERE num_of_task IS ? AND type_of_task IS ?;''',
+                (score, num, type))
+    conn.commit()
+
 # Checkers
 def check_user_in_users(user_id):
     cur.execute('''SELECT * FROM users WHERE user_id=?;''', (user_id,))
@@ -152,6 +158,18 @@ def get_info_by_status(table: str, user_id: str, status: str):
     info = cur.fetchone()
     return info
 
+
+def get_tasks_for_control(table: str):
+    cur.execute(f'''SELECT num_of_task, type_of_task, text, user_id, answer FROM {table} WHERE status IS ? and score IS ?;''',
+                ('complete', 0,))
+    arr = cur.fetchall()
+    return arr
+
+
+def get_user_id_in_task(table: str, num: int, type: int):
+    cur.execute(f'''SELECT user_id FROM {table} WHERE num_of_task IS ? AND type_of_task IS ?;''', (num, type,))
+    user_id = cur.fetchone()[0]
+    return user_id
 
 # Statistics
 def inc_do(user_id: str):

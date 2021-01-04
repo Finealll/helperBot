@@ -12,7 +12,14 @@ def get_main_keyboard(user_id):
         buttons.append(kg.Button.text(label='Текущее задание', payload=payloads.payloads['get_now_task']))
     else:
         buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
-    #buttons.append(kg.Button.text(label='Проверка качества', payload=payloads.payloads['get_roles_list']))
+
+        subject_controler = db_work.get_controler_info(user_id)
+        if subject_controler is not None:
+            tasks = db_work.get_tasks_for_control(names.subject_to_table[subject_controler])
+            if len(tasks) > 0:
+                payload = dict(payloads.payloads['get_quality_numbers'])
+                payload['subject'] = subject_controler
+                buttons.append(kg.Button.text(label='Проверка качества', payload=payload))
 
 
     buttons.append(kg.Button.text(label='Мой профиль', payload=payloads.payloads['get_profile']))
@@ -116,6 +123,26 @@ def get_push_file_keyboard(subject, num, type):
     generator.load(buttons)
     kb = generator.get()
     return kb
+
+def get_quality_number_keyboard(subject, num, type):
+    buttons = []
+    payload1 = dict(payloads.payloads['change_quality_score'])
+    payload2 = dict(payloads.payloads['change_quality_score'])
+    payload3 = dict(payloads.payloads['on_main_from_quality'])
+    payload3['subject'] = payload2['subject'] = payload1['subject'] = subject
+    payload3['num'] = payload2['num'] = payload1['num'] = num
+    payload3['type_task'] = payload2['type_task'] = payload1['type_task'] = type
+    payload2['score'] = 1
+    payload1['score'] = 2
+
+    buttons.append(kg.Button.text(label="Норм", color='positive', payload=payload1))
+    buttons.append(kg.Button.text(label="Не норм", color='negative', payload=payload2))
+    buttons.append(kg.Button.text(label="На главную", payload=payload3))
+    generator = kg.KeyBoard(one_line=True)
+    generator.load(buttons)
+    kb = generator.get()
+    return kb
+
 
 
 

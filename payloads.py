@@ -5,6 +5,14 @@ payloads = {
         "type": "open_keyboard",
         "name": "get_main_keyboard"
     },
+    "on_main_from_quality": {
+        "type": "open_keyboard",
+        "name": "on_main_from_quality",
+        "subject": "",
+        "num": 0,
+        "type_task": 0,
+
+    },
     "get_tasks_list": {     #Открытие списка предметов
         "type": "open_keyboard",
         "name": "get_tasks_list"
@@ -134,6 +142,19 @@ payloads = {
     "get_profile": {    # Отправка инфо о профиле
         "type": "send_info_message",
         "name": "get_profile",
+    },  # Проверка качества
+    "get_quality_numbers": {
+        "type": "check_quality",
+        "name": "get_quality_num",
+        "subject": "",
+    },
+    "change_quality_score": {
+        "type": "check_quality",
+        "name": "change_quality_score",
+        "subject": "",
+        "num": 0,
+        "type_task": 0,
+        "score": 0,
     },
     #Роль
     "change_role": {

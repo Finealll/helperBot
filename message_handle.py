@@ -53,6 +53,9 @@ def message_handler(data, token):
                 # Переход на главную
                 if payload['name'] == 'get_main_keyboard':
                     bot_methods.go_home(user_id, token)
+                    # Домой из проверки качества
+                elif payload['name'] == 'on_main_from_quality':
+                    bot_methods.on_main_from_quality(user_id, token, payload)
                 # Переход к предметам по ролям
                 elif payload['name'] == 'get_tasks_list':
                     bot_methods.get_task_list(user_id, token)
@@ -112,20 +115,29 @@ def message_handler(data, token):
 
 
             # Add task
-            if payload['type'] == 'add_task':
+            elif payload['type'] == 'add_task':
                 bot_methods.add_task(user_id, token, payload)
 
             # Delete task
-            if payload['type'] == 'delete_task':
+            elif payload['type'] == 'delete_task':
                 bot_methods.delete_task(user_id, token, payload)
 
             # Push task
-            if payload['type'] == 'push_task':
+            elif payload['type'] == 'push_task':
                 bot_methods.push_task(user_id, token, payload)
 
             # Random nunmer
-            if payload['type'] == 'get_random_number':
+            elif payload['type'] == 'get_random_number':
                 bot_methods.add_random_number(user_id, token, payload)
+
+            # check quality
+            elif payload['type'] == 'check_quality':
+                # Получение рандомного номера с заданием
+                if payload['name'] == 'get_quality_num':
+                    bot_methods.get_quality_num(user_id, token, payload)
+                # Отправка отзыва на задание
+                if payload['name'] == 'change_quality_score':
+                    bot_methods.change_quality_score(user_id, token, payload)
 
 
 def event_handler(data, token):
