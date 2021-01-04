@@ -14,6 +14,9 @@ def admin_delete_users(user_id, token):
     vkAPI.send_message(user_id, token, "Пользователи удалены")
 
 
+
+
+
 # user methods
 # Main
 
@@ -21,9 +24,6 @@ def add_new_user(user_id, token):
     info = vkAPI.get_user_info(user_id, token)
     if not db_work.check_user_in_users(user_id):
         db_work.add_user(user_id, info[0], info[1])
-        vkAPI.send_message(user_id, token, 'Ты добавлен!')
-    else:
-        vkAPI.send_message(user_id, token, 'Ты уже есть в бд')
 
 
 def go_home(user_id, token):
