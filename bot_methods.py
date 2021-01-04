@@ -298,6 +298,7 @@ def change_quality_score(user_id, token, payload):
         table = names.subject_to_table[payload['subject']]
         user = db_work.get_user_id_in_task(table, payload['num'], payload['type_task'])
         db_work.update_status(table, payload['num'], payload['type_task'], user, 'returned')
+        db_work.dec_do(user)
         for _table in names.table_name:
             if db_work.check_is_exist_status(_table, user, 'in process') or db_work.check_is_exist_status(_table, user, 'loading'):
                 info = vkAPI.get_user_info(user_id, token)
@@ -309,6 +310,9 @@ def change_quality_score(user_id, token, payload):
                 break
         if buff:
             check_returned(user, token)
+    vkAPI.send_message(user_id, token, 'Спасибо за вашу оценку!', keyboard=keyboards.get_main_keyboard(user_id))
+    db_work.inc_control(user_id)
+
 
 
 
