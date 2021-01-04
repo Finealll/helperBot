@@ -108,7 +108,7 @@ def message_handler(data, token):
                     bot_methods.get_faq(user_id, token)
                     #Отправка инфы о профиле
                 elif payload['name'] == 'get_profile':
-                    bot_methods.get_profie(user_id, token)
+                    bot_methods.get_profile(user_id, token)
 
 
             # Add task
