@@ -203,12 +203,11 @@ def write_attachment(user_id, token, attachment):
         response = vkAPI.api.docs.save(access_token=VKsettings.token, file=filestr)
         answer = 'doc'+str(response['doc']['owner_id']) + '_' + str(response['doc']['id'])
         db_work.update_answer(_table, info[0], info[1], answer)
-        vkAPI.send_message(user_id, token, "Файл успешно загружен!")
+        vkAPI.send_message(user_id, token, "Задание успешно отправлено!")
 
         db_work.update_status(_table, info[0], info[1], user_id, 'complete')
         db_work.update_score(_table, info[0], info[1], 0)
         db_work.inc_do(user_id)
-        vkAPI.send_message(user_id, token, "Задание успешно отправлено!")
 
         subj = db_work.get_controler_info(user_id)
         if subj is not None:
