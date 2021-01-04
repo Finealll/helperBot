@@ -36,6 +36,7 @@ def message_handler(data, token):
 
         if 'command' in payload.keys() and payload['command'] == 'start':
             bot_methods.add_new_user(user_id, token)
+            bot_methods.go_home(user_id, token)
 
         # Обработка кнопок с кастомными payloadами
         if 'type' in payload.keys():
