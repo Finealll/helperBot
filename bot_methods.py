@@ -205,22 +205,39 @@ def write_attachment(user_id, token, attachment):
         db_work.update_answer(_table, info[0], info[1], answer)
         vkAPI.send_message(user_id, token, "Файл успешно загружен!")
 
+        db_work.update_status(_table, info[0], info[1], user_id, 'complete')
+        db_work.update_score(_table, info[0], info[1], 0)
+        db_work.inc_do(user_id)
+        vkAPI.send_message(user_id, token, "Задание успешно отправлено!")
+
+        subj = db_work.get_controler_info(user_id)
+        if subj is not None:
+            if subj == names.table_to_subject[_table]:
+                db_work.update_score(_table, info[0], info[1], 2)
+                db_work.update_controler_from_task(_table, info[0], info[1], user_id)
+
+
+        check_returned(user_id, token)
+        go_home(user_id, token)
+
     else:
         vkAPI.send_message(user_id, token, 'Файл не распознан!', keyboard=keyboards.get_main_keyboard(user_id))
 
-def send_file(user_id, token, payload):
-    table_name = names.subject_to_table[payload['subject']]
-    answer = db_work.get_answer(table_name, payload['num'], payload['type_task'])
-    if answer == '-':
-        vkAPI.send_message(user_id, token, "Отправьте документ в чат перед нажатием на кнопку!")
-        return
-    else:
-        db_work.update_status(table_name, payload['num'], payload['type_task'], user_id, 'complete')
-        db_work.update_score(table_name, payload['num'], payload['type_task'], 0)
-        db_work.inc_do(user_id)
-        vkAPI.send_message(user_id, token, "Задание успешно отправлено!")
-        check_returned(user_id, token)
-        go_home(user_id, token)
+# def send_file(user_id, token, payload):
+#     table_name = names.subject_to_table[payload['subject']]
+#     answer = db_work.get_answer(table_name, payload['num'], payload['type_task'])
+#     if answer == '-':
+#         vkAPI.send_message(user_id, token, "Отправьте документ в чат перед нажатием на кнопку!")
+#         return
+#     else:
+#         db_work.update_status(table_name, payload['num'], payload['type_task'], user_id, 'complete')
+#         db_work.update_score(table_name, payload['num'], payload['type_task'], 0)
+#         db_work.inc_do(user_id)
+#         vkAPI.send_message(user_id, token, "Задание успешно отправлено!")
+#
+#
+#         check_returned(user_id, token)
+#         go_home(user_id, token)
 
 
 
