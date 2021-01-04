@@ -150,10 +150,15 @@ def get_now_task(user_id, token):
     for table in names.table_name:
         if db_work.check_is_exist_status(table, user_id, 'in process'):
             task = db_work.get_now_task(table, user_id)
-            message = f'Текущее задание:\n{names.table_to_subject[table]}. {get_type_question(task[1]).capitalize()}. №{task[0]}' \
-                      f'\nЗадание: {task[2]}'
             keyboard = keyboards.get_now_task_keyboard(names.table_to_subject[table], task[0], task[1])
-            vkAPI.send_message(user_id, token, message, keyboard=keyboard)
+            if task[1] == 3:
+                message = f'Текущее задание:\n{names.table_to_subject[table]}. {get_type_question(task[1]).capitalize()}. №{task[0]}' \
+                          f'\nЗадание: во вложении'
+                vkAPI.send_message(user_id, token, message, attachment=task[2], keyboard=keyboard)
+            else:
+                message = f'Текущее задание:\n{names.table_to_subject[table]}. {get_type_question(task[1]).capitalize()}. №{task[0]}' \
+                          f'\nЗадание: {task[2]}'
+                vkAPI.send_message(user_id, token, message, keyboard=keyboard)
             buff = True
     if not buff:
         vkAPI.send_message(user_id, token, 'У вас нет заданий!', keyboard=keyboards.get_main_keyboard(user_id))
