@@ -15,7 +15,7 @@ def get_main_keyboard(user_id):
     #buttons.append(kg.Button.text(label='Проверка качества', payload=payloads.payloads['get_roles_list']))
 
 
-    buttons.append(kg.Button.text(label='Мой профиль', payload=payloads['get_profile']))
+    buttons.append(kg.Button.text(label='Мой профиль', payload=payloads.payloads['get_profile']))
     buttons.append(kg.Button.text(label='FAQ', payload=payloads.payloads['get_faq']))
     generator = kg.KeyBoard(False, False, False)
     generator.load(buttons)
