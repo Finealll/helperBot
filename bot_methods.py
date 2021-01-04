@@ -75,9 +75,14 @@ def add_task(user_id, token, payload):
         db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'in process')
         free_numbers = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
         text = db_work.get_text(table_name, payload["number"], payload['type_task'])
-        message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
-                  f'\nЗадание: {text}'
-        vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
+        if payload["type_task"] == 3:
+            message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
+                      f'\nЗадание: во вложении'
+            vkAPI.send_message(user_id, token, message, attachment=text, keyboard=keyboards.get_main_keyboard(user_id))
+        else:
+            message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{payload["number"]}' \
+                      f'\nЗадание: {text}'
+            vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
 
 
 def add_random_number(user_id, token, payload):
@@ -97,9 +102,14 @@ def add_random_number(user_id, token, payload):
         add_random_number(user_id, token, payload)
     else:
         db_work.update_status(table_name, free_numbers1[index][0], payload['type_task'], user_id, 'in process')
-        message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{free_numbers1[index][0]}' \
-                  f'\nЗадание: {free_numbers1[index][1]}'
-        vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
+        if payload["type_task"] == 3:
+            message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{free_numbers1[index][0]}' \
+                      f'\nЗадание: во вложении'
+            vkAPI.send_message(user_id, token, message, attachment=free_numbers1[index][1], keyboard=keyboards.get_main_keyboard(user_id))
+        else:
+            message = f'Добавлено:\n{payload["subject"]}. {get_type_question(payload["type_task"]).capitalize()}. №{free_numbers1[index][0]}' \
+                      f'\nЗадание: {free_numbers1[index][1]}'
+            vkAPI.send_message(user_id, token, message, keyboard=keyboards.get_main_keyboard(user_id))
 
 
 
@@ -162,27 +172,35 @@ def check_dialog(user_id, token):
 
 
 def write_attachment(user_id, token, attachment):
-    url = attachment['url']
-    response = requests.get(url)
-
-    name = str(random.randint(0, 999999999)) + '.docx'
-    file = open(name, 'wb')
-    file.write(response.content)
-    file.close()
-
-    upload_url = vkAPI.api.docs.getWallUploadServer(access_token=VKsettings.token, group_id=names.id_community)[
-        'upload_url']
-    filestr = requests.post(upload_url, files={'file': open(name, 'rb')}).json()['file']
-    file.close()
-    os.remove(name)
-
-    response = vkAPI.api.docs.save(access_token=VKsettings.token, file=filestr)
-    answer = 'doc'+str(response['doc']['owner_id']) + '_' + str(response['doc']['id'])
+    info = None
+    _table = ""
     for table in names.table_name:
         if db_work.check_is_exist_status(table, user_id, 'loading'):
             info = db_work.get_info_by_status(table, user_id, 'loading')
-            db_work.update_answer(table, info[0], info[1], answer)
+            _table = table
+            break
+    if info is not None:
+        url = attachment['url']
+        response = requests.get(url)
 
+        name = f'{names.table_to_subject[_table]} {get_type_question(info[1])} {info[0]}.docx'
+        file = open(name, 'wb')
+        file.write(response.content)
+        file.close()
+
+        upload_url = vkAPI.api.docs.getWallUploadServer(access_token=VKsettings.token, group_id=names.id_community)[
+            'upload_url']
+        filestr = requests.post(upload_url, files={'file': open(name, 'rb')}).json()['file']
+        file.close()
+        os.remove(name)
+
+        response = vkAPI.api.docs.save(access_token=VKsettings.token, file=filestr)
+        answer = 'doc'+str(response['doc']['owner_id']) + '_' + str(response['doc']['id'])
+        db_work.update_answer(_table, info[0], info[1], answer)
+        vkAPI.send_message(user_id, token, "Файл успешно загружен!")
+
+    else:
+        vkAPI.send_message(user_id, token, 'Файл не распознан!', keyboard=keyboards.get_main_keyboard(user_id))
 
 def send_file(user_id, token, payload):
     table_name = names.subject_to_table[payload['subject']]
@@ -205,7 +223,7 @@ def check_returned(user_id, token):
             info = db_work.get_info_by_status(table, user_id, 'returned')
             db_work.update_status(table, info[0], info[1], user_id, 'in process')
             answer = db_work.get_answer(table, info[0], info[1])
-            db_work.update_answer(table,info[0], info[1])
+            db_work.update_answer(table, info[0], info[1])
             message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
                       f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nВаш ответ: {"vk.com/"+answer}'
             vkAPI.send_message(user_id, token, message, attachment=answer, keyboard=keyboards.get_main_keyboard(user_id))

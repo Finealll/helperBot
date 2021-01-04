@@ -22,7 +22,10 @@ def message_handler(data, token):
 
     if len(data['object']['message']['attachments']) > 0:
         if data['object']['message']['attachments'][0]['type'] == 'doc':
-            bot_methods.write_attachment(user_id, token, data['object']['message']['attachments'][0]['doc'])
+            if data['object']['message']['attachments'][0]['type']['doc']['ext'] == 'docx':
+                bot_methods.write_attachment(user_id, token, data['object']['message']['attachments'][0]['doc'])
+            else:
+                vkAPI.send_message(user_id, token, 'Отправьте файл в формате .docx')
 
 
     #with payoad
