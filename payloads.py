@@ -133,7 +133,7 @@ payloads = {
     },
     "get_profile": {    # Отправка инфо о профиле
         "type": "send_info_message",
-        'name': 'get_profile',
+        "name": "get_profile",
     },
     #Роль
     "change_role": {
