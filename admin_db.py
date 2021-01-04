@@ -20,7 +20,6 @@ def get_clear_tables():
                     db_work.add_field(table_name, task['num'], task['type'], task['text'])
 
 
-
 def GetClearTables():
     pass
 

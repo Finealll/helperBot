@@ -43,8 +43,8 @@ def message_handler(data, token):
             if payload['type'] == 'file_pushing':
                 if payload['name'] == 'get_main_keyboard_with_exit':
                     bot_methods.go_home_without_saving(user_id, token, payload)
-                elif payload['name'] == 'send_file':
-                    bot_methods.send_file(user_id, token, payload)
+                # elif payload['name'] == 'send_file':
+                #     bot_methods.send_file(user_id, token, payload)
                 return
 
             if bot_methods.check_dialog(user_id, token):
@@ -140,6 +140,11 @@ def message_handler(data, token):
                 # Отправка отзыва на задание
                 if payload['name'] == 'change_quality_score':
                     bot_methods.change_quality_score(user_id, token, payload)
+
+
+    elif data['object']['message']['text'] == 'Начать':
+        bot_methods.add_new_user(user_id, token)
+        bot_methods.go_home(user_id, token)
 
 
 def event_handler(data, token):

@@ -131,7 +131,7 @@ def push_task(user_id, token, payload):
         vkAPI.send_message(user_id, token, 'Вы не являетесь (уже) исполнителем этого задания!')
         return
     db_work.update_status(table_name, payload['number'], payload['type_task'], user_id, 'loading')
-    message = "Пришлите в диалог ответ на вопрос в формате .docx, затем нажмите кнопку отправить."
+    message = "Пришлите в диалог ответ на вопрос в формате .docx"
     keyboard = keyboards.get_push_file_keyboard(payload['subject'], payload['number'], payload['type_task'])
     vkAPI.send_message(user_id, token, message, keyboard=keyboard)
 
