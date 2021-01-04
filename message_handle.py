@@ -8,21 +8,36 @@ def message_handler(data, token):
 
     #no payload:
     # admin
-    if data['object']['message']['text'] == 'admin_delete_users!':
-        bot_methods.admin_delete_users(user_id, token)
-    elif data['object']['message']['text'] == 'admin_get_users!':
+    # if data['object']['message']['text'] == 'admin_delete_users!':
+    #     bot_methods.admin_delete_users(user_id, token)
+    #     return
+    if data['object']['message']['text'] == 'admin_get_users!':
         bot_methods.admin_get_users(user_id, token)
-    elif data['object']['message']['text'] == 'admin_addme!':
-        bot_methods.add_new_user(user_id, token)
-    elif data['object']['message']['text'] == 'admin_cldbs!':
-        admin_db.get_clear_tables()
+        return
+    # elif data['object']['message']['text'] == 'admin_addme!':
+    #     bot_methods.add_new_user(user_id, token)
+    #     return
+    # elif data['object']['message']['text'] == 'admin_cldbs!':
+    #     admin_db.get_clear_tables()
+    #     vkAPI.send_message(user_id, token, 'Все бд очищены!')
+    #     return
+    # elif data['object']['message']['text'] == 'admin_cl!':
+    #     admin_db.get_clear()
+    #     vkAPI.send_message(user_id, token, 'Бд с заданиями очищены!')
+    #     return
     elif data['object']['message']['text'] == 'admin_get_keyboard!':
         bot_methods.go_home(user_id, token)
-    elif data['object']['message']['text'] == 'Начать':
+        return
+    elif data['object']['message']['text'].upper() == 'НАЧАТЬ':
+        if bot_methods.check_dialog(user_id, token):
+            return
         bot_methods.add_new_user(user_id, token)
+        bot_methods.go_home(user_id, token)
+        return
 
 
-    if len(data['object']['message']['attachments']) > 0:
+
+    elif len(data['object']['message']['attachments']) > 0:
         if data['object']['message']['attachments'][0]['type'] == 'doc':
             if data['object']['message']['attachments'][0]['doc']['ext'] == 'docx':
                 bot_methods.write_attachment(user_id, token, data['object']['message']['attachments'][0]['doc'])
@@ -31,7 +46,7 @@ def message_handler(data, token):
 
 
     #with payoad
-    if 'payload' in data['object']['message']:
+    elif 'payload' in data['object']['message']:
         payload = json.loads(data['object']['message']['payload'])
 
         if 'command' in payload.keys() and payload['command'] == 'start':
@@ -39,7 +54,7 @@ def message_handler(data, token):
             bot_methods.go_home(user_id, token)
 
         # Обработка кнопок с кастомными payloadами
-        if 'type' in payload.keys():
+        elif 'type' in payload.keys():
 
             if payload['type'] == 'file_pushing':
                 if payload['name'] == 'get_main_keyboard_with_exit':
@@ -48,11 +63,11 @@ def message_handler(data, token):
                 #     bot_methods.send_file(user_id, token, payload)
                 return
 
-            if bot_methods.check_dialog(user_id, token):
+            elif bot_methods.check_dialog(user_id, token):
                 return
 
             # open keyboards
-            if payload['type'] == 'open_keyboard':
+            elif payload['type'] == 'open_keyboard':
                 # Переход на главную
                 if payload['name'] == 'get_main_keyboard':
                     bot_methods.go_home(user_id, token)
@@ -141,11 +156,11 @@ def message_handler(data, token):
                 # Отправка отзыва на задание
                 if payload['name'] == 'change_quality_score':
                     bot_methods.change_quality_score(user_id, token, payload)
+    else:
+        vkAPI.send_message(user_id, token, 'И тебе доброе утро! (я тебя не поняла)')
 
 
-    elif data['object']['message']['text'] == 'Начать':
-        bot_methods.add_new_user(user_id, token)
-        bot_methods.go_home(user_id, token)
+
 
 
 def event_handler(data, token):

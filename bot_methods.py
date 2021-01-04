@@ -5,8 +5,11 @@ import json
 # admin methods
 def admin_get_users(user_id, token):
     users = admin_db.GetUsers()
-    for user in users:
-        vkAPI.send_message(user_id, token, message=user[0] + " " + user[1] + " " + user[2])
+    if len(users) == 0:
+        vkAPI.send_message(user_id, token, 'Пользователей нема')
+    else:
+        for user in users:
+            vkAPI.send_message(user_id, token, message=user[1] + " " + user[2] + " " + str(user[3]) + " " + str(user[5]))
 
 
 def admin_delete_users(user_id, token):
@@ -33,6 +36,7 @@ def go_home(user_id, token):
 
 # Work with tasks
 def get_task_list(user_id, token):
+    add_new_user(user_id, token)
     vkAPI.send_message(user_id, token, 'Выберите предмет:',
                        keyboard=keyboards.get_subjects_keyboard())
 
@@ -148,6 +152,7 @@ def get_type_question(type:int):
 
 def get_now_task(user_id, token):
     buff = False
+    add_new_user(user_id, token)
     for table in names.table_name:
         if db_work.check_is_exist_status(table, user_id, 'in process'):
             task = db_work.get_now_task(table, user_id)
@@ -166,6 +171,7 @@ def get_now_task(user_id, token):
 
 
 def get_faq(user_id, token):
+    add_new_user(user_id, token)
     vkAPI.send_message(user_id, token, names.faq)
 
 
@@ -288,6 +294,7 @@ def get_profile(user_id, token):
 
 
 def get_quality_num(user_id, token, payload):
+    add_new_user(user_id, token)
     subject = payload['subject']
     tasks = db_work.get_tasks_for_control(names.subject_to_table[subject])
     if len(tasks) > 0:

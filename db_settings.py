@@ -1,1 +1,1 @@
-patch = 'Databases/MainDB.sqlite3'
+patch = '/home/fineall/helperBot/Databases/MainDB.sqlite3'

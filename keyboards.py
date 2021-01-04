@@ -112,11 +112,10 @@ def get_now_task_keyboard(subject, num, type):
 
 def get_push_file_keyboard(subject, num, type):
     buttons = []
-    # payload1 = payloads.payloads['send_file']
     payload2 = payloads.payloads['get_main_keyboard_with_exit']
-    # payload1['subject'] = payload2['subject'] = subject
-    # payload1['num'] = payload2['num'] = num
-    # payload1['type_task'] = payload2['type_task'] = type
+    payload2['subject'] = subject
+    payload2['num'] = num
+    payload2['type_task'] = type
     # buttons.append(kg.Button.text(label='Отправить', payload=payload1, color='positive'))
     buttons.append(kg.Button.text(label='На главную', payload=payload2))
     generator = kg.KeyBoard()
