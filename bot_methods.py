@@ -216,6 +216,7 @@ def send_file(user_id, token, payload):
         return
     else:
         db_work.update_status(table_name, payload['num'], payload['type_task'], user_id, 'complete')
+        db_work.update_score(table_name, payload['num'], payload['type_task'], 0)
         db_work.inc_do(user_id)
         vkAPI.send_message(user_id, token, "Задание успешно отправлено!")
         check_returned(user_id, token)
@@ -230,14 +231,18 @@ def check_returned(user_id, token):
             db_work.update_status(table, info[0], info[1], user_id, 'in process')
             answer = db_work.get_answer(table, info[0], info[1])
             db_work.update_answer(table, info[0], info[1])
+            controler = vkAPI.get_user_info(db_work.get_controler_from_task(table, info[0], info[1]), token)
+
             if info[1] == 3:
                 message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
-                          f'Причина: не прошло проверку качества!\nЗадание: во вложении\nВаш ответ: во вложении'
+                          f'Причина: не прошло проверку качества!\nПроверяющий: {controler[1]} {controler[0]}\nЗадание: во вложении' \
+                          f'\nВаш ответ: во вложении'
                 vkAPI.send_message(user_id, token, message, attachment=str(answer+','+info[2]),
                                    keyboard=keyboards.get_main_keyboard(user_id))
             else:
                 message = f'Вам добавлено задание:\n{names.table_to_subject[table]}. {get_type_question(info[1])}. №{info[0]}\n' \
-                          f'Причина: не прошло проверку качества!\nЗадание: {info[2]}\nВаш ответ: во вложении'
+                          f'Причина: не прошло проверку качества!\nПроверяющий: {controler[1]} {controler[0]}' \
+                          f'\nЗадание: {info[2]}\nВаш ответ: во вложении'
                 vkAPI.send_message(user_id, token, message, attachment=answer, keyboard=keyboards.get_main_keyboard(user_id))
 
 
@@ -299,6 +304,7 @@ def change_quality_score(user_id, token, payload):
         user = db_work.get_user_id_in_task(table, payload['num'], payload['type_task'])
         db_work.update_status(table, payload['num'], payload['type_task'], user, 'returned')
         db_work.dec_do(user)
+        db_work.update_controler_from_task(table, payload['num'], payload['type_task'], user_id)
         for _table in names.table_name:
             if db_work.check_is_exist_status(_table, user, 'in process') or db_work.check_is_exist_status(_table, user, 'loading'):
                 info = vkAPI.get_user_info(user_id, token)

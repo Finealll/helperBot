@@ -58,6 +58,12 @@ def update_score(table: str, num: int, type: int, score: int):
                 (score, num, type))
     conn.commit()
 
+
+def update_controler_from_task(table: str, num: int, type: int, controller: str):
+    cur.execute(f'''UPDATE {table} SET controler = ?  WHERE num_of_task IS ? AND type_of_task IS ?;''', (controller, num, type,))
+    conn.commit()
+
+
 # Checkers
 def check_user_in_users(user_id):
     cur.execute('''SELECT * FROM users WHERE user_id=?;''', (user_id,))
@@ -113,6 +119,11 @@ def get_controler_info(user_id: str):
     buff = cur.fetchone()
     return None if buff == None else buff[0]
 
+
+def get_controler_from_task(table: str, num: int, type: int):
+    cur.execute(f'''SELECT controler FROM {table} WHERE num_of_task IS ? AND type_of_task IS ?;''', (num,type,))
+    buff = cur.fetchone()
+    return None if buff == None else buff[0]
 
 
 def get_free_numbers_and_text(table: str, type: int):
