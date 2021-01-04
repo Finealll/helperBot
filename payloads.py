@@ -131,6 +131,9 @@ payloads = {
         "type": "send_info_message",
         "name": "get_faq",
     },
+    "get_profile": {    # Отправка инфо о профиле
+        "type": "send_info_message",
+    },
     #Роль
     "change_role": {
         "type": "change_info",

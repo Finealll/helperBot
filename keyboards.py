@@ -13,6 +13,9 @@ def get_main_keyboard(user_id):
     else:
         buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
     #buttons.append(kg.Button.text(label='Проверка качества', payload=payloads.payloads['get_roles_list']))
+
+
+    buttons.append(kg.Button.text(label='Мой профиль', payload=payloads['get_profile']))
     buttons.append(kg.Button.text(label='FAQ', payload=payloads.payloads['get_faq']))
     generator = kg.KeyBoard(False, False, False)
     generator.load(buttons)
@@ -21,10 +24,14 @@ def get_main_keyboard(user_id):
 
 def get_subjects_keyboard():
     buttons = []
-    buttons.append(kg.Button.text(label=names.name_of_subject[0], payload=payloads.payloads['get_progers_types']))
-    buttons.append(kg.Button.text(label=names.name_of_subject[1], payload=payloads.payloads['get_eltech_types']))
-    buttons.append(kg.Button.text(label=names.name_of_subject[2], payload=payloads.payloads['get_math_types']))
-    buttons.append(kg.Button.text(label=names.name_of_subject[3], payload=payloads.payloads['get_physics_types']))
+    if db_work.check_free_numbers(names.table_name[0]):
+        buttons.append(kg.Button.text(label=names.name_of_subject[0], payload=payloads.payloads['get_progers_types']))
+    if db_work.check_free_numbers(names.table_name[1]):
+        buttons.append(kg.Button.text(label=names.name_of_subject[1], payload=payloads.payloads['get_eltech_types']))
+    if db_work.check_free_numbers(names.table_name[2]):
+        buttons.append(kg.Button.text(label=names.name_of_subject[2], payload=payloads.payloads['get_math_types']))
+    if db_work.check_free_numbers(names.table_name[3]):
+        buttons.append(kg.Button.text(label=names.name_of_subject[3], payload=payloads.payloads['get_physics_types']))
     buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
     generator = kg.KeyBoard()
     generator.load(buttons)

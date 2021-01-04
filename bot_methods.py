@@ -249,3 +249,13 @@ def get_tasks(user_id, token, payload):
     vkAPI.send_message(user_id, token, 'Задания:', attachment=attachment)
 
 
+def get_profile(user_id, token):
+    add_new_user(user_id, token)
+    user_info = db_work.get_user_info(user_id)
+    subject_controler = db_work.get_controler_info(user_id)
+    message = f'{user_info[1]} {user_info[2]}\nВсего выполнено заданий: {user_info[3]}'
+    if subject_controler is not None:
+        message += f"\nЭксперт в предмете {subject_controler}\nВсего проверил заданий: {user_info[5]}"
+    vkAPI.send_message(user_id, token, message)
+
+

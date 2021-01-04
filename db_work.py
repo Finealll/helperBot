@@ -96,6 +96,19 @@ def check_is_exist_status(table: str, user_id: str, status: str):
 
 # Getters
 
+def get_user_info(user_id: str):
+    cur.execute(f'''SELECT * FROM users WHERE user_id IS ?;''', (user_id,))
+    buff = cur.fetchone()
+    return buff
+
+
+def get_controler_info(user_id: str):
+    cur.execute(f'''SELECT subject FROM controlers WHERE user_id IS ?;''', (user_id,))
+    buff = cur.fetchone()
+    return None if buff == None else buff[0]
+
+
+
 def get_free_numbers_and_text(table: str, type: int):
     cur.execute(f'''SELECT num_of_task, text FROM {table} WHERE status IS ? AND type_of_task IS ?;''', ('not complete', type))
     buff = cur.fetchall()
@@ -156,3 +169,34 @@ def inc_refuse(user_id: str):
     cur.execute('''UPDATE users SET refuse_all = ? WHERE user_id IS ?;''', (refuse, user_id,))
     conn.commit()
 
+
+def inc_control(user_id: str):
+    cur.execute(f'''SELECT control_all FROM users WHERE users.user_id IS ?;''', (user_id,))
+    refuse = cur.fetchone()[0]
+    refuse += 1
+    cur.execute('''UPDATE users SET control_all = ? WHERE user_id IS ?;''', (refuse, user_id,))
+    conn.commit()
+
+
+def dec_do(user_id: str):
+    cur.execute(f'''SELECT count_all FROM users WHERE users.user_id IS ?;''', (user_id,))
+    count = cur.fetchone()[0]
+    count -= 1
+    cur.execute('''UPDATE users SET count_all = ? WHERE user_id IS ?;''', (count, user_id,))
+    conn.commit()
+
+
+def dec_refuse(user_id: str):
+    cur.execute(f'''SELECT refuse_all FROM users WHERE users.user_id IS ?;''', (user_id,))
+    refuse = cur.fetchone()[0]
+    refuse -= 1
+    cur.execute('''UPDATE users SET refuse_all = ? WHERE user_id IS ?;''', (refuse, user_id,))
+    conn.commit()
+
+
+def dec_control(user_id: str):
+    cur.execute(f'''SELECT control_all FROM users WHERE users.user_id IS ?;''', (user_id,))
+    refuse = cur.fetchone()[0]
+    refuse -= 1
+    cur.execute('''UPDATE users SET control_all = ? WHERE user_id IS ?;''', (refuse, user_id,))
+    conn.commit()
