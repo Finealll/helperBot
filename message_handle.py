@@ -156,8 +156,6 @@ def message_handler(data, token):
                 # Отправка отзыва на задание
                 if payload['name'] == 'change_quality_score':
                     bot_methods.change_quality_score(user_id, token, payload)
-    else:
-        vkAPI.send_message(user_id, token, 'И тебе доброе утро! (я тебя не поняла)')
 
 
 

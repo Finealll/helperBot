@@ -321,13 +321,13 @@ def get_quality_num(user_id, token, payload):
 
 def change_quality_score(user_id, token, payload):
     db_work.update_score(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], payload['score'])
+    db_work.update_controler_from_task(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], user_id)
     if payload['score'] == 1:
         buff = True
         table = names.subject_to_table[payload['subject']]
         user = db_work.get_user_id_in_task(table, payload['num'], payload['type_task'])
         db_work.update_status(table, payload['num'], payload['type_task'], user, 'returned')
         db_work.dec_do(user)
-        db_work.update_controler_from_task(table, payload['num'], payload['type_task'], user_id)
         for _table in names.table_name:
             if db_work.check_is_exist_status(_table, user, 'in process') or db_work.check_is_exist_status(_table, user, 'loading'):
                 info = vkAPI.get_user_info(user_id, token)
