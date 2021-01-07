@@ -5,6 +5,8 @@ def message_handler(data, token):
     user_id = data['object']['message']['from_id']
     user_info = vkAPI.get_user_info(user_id, token)
 
+    # vkAPI.send_message(user_id, token, 'Обновляю бота до 1:15')
+    # return
 
     #no payload:
     # admin

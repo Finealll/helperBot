@@ -58,7 +58,7 @@ def get_subject_types(user_id, token, payload):
 def get_free_progers_numbers(user_id, token, table_name, type):
     free_numbers = db_work.get_free_numbers_and_text(table_name, type)
     keyboard = keyboards.get_free_numbers_keyboard(names.table_to_subject[table_name], free_numbers, type)
-    vkAPI.send_message(user_id, token, "Выберите задания", keyboard=keyboard)
+    vkAPI.send_message(user_id, token, "Выберите задание", keyboard=keyboard)
 
 
 
@@ -276,11 +276,16 @@ def go_home_without_saving(user_id, token, payload):
 
 
 def get_tasks(user_id, token, payload):
-    for item in names.questions:
-        if item['subject'] == payload['subject']:
-            attachment = item['attachment']
+    message = ""
+    for item in names.name_of_subject:
+        if item == payload['subject']:
+            message += f"Свободные задания:\n"
+            free_numbers = db_work.get_free_numbers_and_text(names.subject_to_table[item], payload['type_task'])
+            print(free_numbers)
+            for task in free_numbers:
+                message += f"{task[0]}) {task[1]}\n"
             break
-    vkAPI.send_message(user_id, token, 'Задания:', attachment=attachment)
+    vkAPI.send_message(user_id, token, message)
 
 
 def get_profile(user_id, token):

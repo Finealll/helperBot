@@ -168,6 +168,7 @@ payloads = {
         "type": "get_doc",
         "name": "get_tasks",
         "subject": "",
+        "type_task": 0
     },
     # Открытие главной клавы, с выходом из функций, затрагивающих бд
     "get_main_keyboard_with_exit": {

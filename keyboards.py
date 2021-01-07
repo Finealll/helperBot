@@ -66,6 +66,7 @@ def get_free_numbers_keyboard(subject, free_numbers, type):
     buttons = []
     payload = payloads.payloads['get_tasks']
     payload["subject"] = subject
+    payload["type_task"] = type
     buttons.append([])
     buttons[0].append(kg.Button.text(label='Показать задания', payload=payload))
     j = 0
