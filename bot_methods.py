@@ -122,6 +122,12 @@ def delete_task(user_id, token, payload):
     table_name = names.subject_to_table[payload['subject']]
     if db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
         db_work.update_status(table_name, payload['number'], payload['type_task'], '-', 'not complete')
+
+        answer = db_work.get_answer(table_name, payload['number'], payload['type_task'])
+        if answer != '-':
+            doc_id = int(answer.split('_')[1])
+            vkAPI.delete_dock(VKsettings.user_token, -names.id_community, doc_id)
+
         vkAPI.send_message(user_id, token, 'Задание успешно отвязано!', keyboard=keyboards.get_main_keyboard(user_id))
         db_work.inc_refuse(user_id)
     else:
@@ -203,10 +209,15 @@ def write_attachment(user_id, token, attachment):
         upload_url = vkAPI.api.docs.getWallUploadServer(access_token=VKsettings.token, group_id=names.id_community)[
             'upload_url']
         filestr = requests.post(upload_url, files={'file': open(name, 'rb')}).json()['file']
-        file.close()
         os.remove(name)
 
         response = vkAPI.api.docs.save(access_token=VKsettings.token, file=filestr)
+
+        answer = db_work.get_answer(_table, info[0], info[1])
+        if answer != '-':
+            doc_id = int(answer.split('_')[1])
+            vkAPI.delete_dock(VKsettings.user_token, -names.id_community, doc_id)
+
         answer = 'doc'+str(response['doc']['owner_id']) + '_' + str(response['doc']['id'])
         db_work.update_answer(_table, info[0], info[1], answer)
         vkAPI.send_message(user_id, token, "Задание успешно отправлено!")

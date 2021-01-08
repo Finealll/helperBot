@@ -9,6 +9,10 @@ def send_message(user_id, token, message, attachment="", keyboard=""):
                       random_id=random.getrandbits(64))
 
 
+def delete_dock(token, owner_id, doc_id):
+    api.docs.delete(access_token=token, owner_id=owner_id, doc_id=doc_id)
+
+
 def get_user_info(user_id, token):
     response = api.users.get(access_token=token, user_ids=user_id)
     if len(response)>0:

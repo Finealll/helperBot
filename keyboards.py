@@ -13,13 +13,13 @@ def get_main_keyboard(user_id):
     else:
         buttons.append(kg.Button.text(label='Доступные задания', payload=payloads.payloads['get_tasks_list']))
 
-        subject_controler = db_work.get_controler_info(user_id)
-        if subject_controler is not None:
-            tasks = db_work.get_tasks_for_control(names.subject_to_table[subject_controler])
-            if len(tasks) > 0:
-                payload = dict(payloads.payloads['get_quality_numbers'])
-                payload['subject'] = subject_controler
-                buttons.append(kg.Button.text(label='Проверка качества', payload=payload))
+    subject_controler = db_work.get_controler_info(user_id)
+    if subject_controler is not None:
+        tasks = db_work.get_tasks_for_control(names.subject_to_table[subject_controler])
+        if len(tasks) > 0:
+            payload = dict(payloads.payloads['get_quality_numbers'])
+            payload['subject'] = subject_controler
+            buttons.append(kg.Button.text(label='Проверка качества', payload=payload))
 
 
     buttons.append(kg.Button.text(label='Мой профиль', payload=payloads.payloads['get_profile']))
