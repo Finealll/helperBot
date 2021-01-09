@@ -1,7 +1,10 @@
 import vk, random
-
+#group session
 session = vk.Session()
 api = vk.API(session, v='5.120')
+#user session
+session1 = vk.AuthSession(7721679, '89208722676', "fineall64810782002", 'docs')
+api1 = vk.API(session1, v='5.120')
 
 
 def send_message(user_id, token, message, attachment="", keyboard=""):
@@ -9,8 +12,12 @@ def send_message(user_id, token, message, attachment="", keyboard=""):
                       random_id=random.getrandbits(64))
 
 
-def delete_dock(token, owner_id, doc_id):
-    api.docs.delete(access_token=token, owner_id=owner_id, doc_id=doc_id)
+def delete_dock(owner_id, doc_id):
+    api1.docs.delete(owner_id=owner_id, doc_id=doc_id)
+
+
+def add_tag_dock(owner_id, doc_id, title, tags):
+    api1.docs.edit(owner_id=owner_id, doc_id=doc_id, title=title, tags=tags)
 
 
 def get_user_info(user_id, token):

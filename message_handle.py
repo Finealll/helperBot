@@ -5,7 +5,7 @@ def message_handler(data, token):
     user_id = data['object']['message']['from_id']
     user_info = vkAPI.get_user_info(user_id, token)
 
-    # vkAPI.send_message(user_id, token, 'Обновляю бота до 1:15')
+    # vkAPI.send_message(user_id, token, 'Обновляю бота до 2:00')
     # return
 
     #no payload:
@@ -35,6 +35,9 @@ def message_handler(data, token):
             return
         bot_methods.add_new_user(user_id, token)
         bot_methods.go_home(user_id, token)
+        return
+    elif data['object']['message']['text'].upper() == 'ПОШЕЛ НАХУЙ':
+        bot_methods.send_go_to_hell(user_id, token, user_info[0] )
         return
 
 
@@ -158,6 +161,12 @@ def message_handler(data, token):
                 # Отправка отзыва на задание
                 if payload['name'] == 'change_quality_score':
                     bot_methods.change_quality_score(user_id, token, payload)
+
+            #Change info
+            elif payload['type'] == 'change_info':
+                # Свитчер уведомлений
+                if payload['name'] == 'change_notify':
+                    bot_methods.change_notify(user_id, token, payload)
 
 
 

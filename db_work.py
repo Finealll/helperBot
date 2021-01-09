@@ -7,7 +7,7 @@ cur = conn.cursor()
 # add users
 def add_user(user_id: str, first_name: str, last_name: str):
     if not check_user_in_users(user_id):
-        cur.execute('''INSERT INTO users VALUES(?,?,?,?,?,?);''', (user_id, first_name, last_name, 0, 0, 0))
+        cur.execute('''INSERT INTO users VALUES(?,?,?,?,?,?,?);''', (user_id, first_name, last_name, 0, 0, 0, 0))
         conn.commit()
         return 1
     else:
@@ -63,6 +63,10 @@ def update_controler_from_task(table: str, num: int, type: int, controller: str)
     cur.execute(f'''UPDATE {table} SET controler = ?  WHERE num_of_task IS ? AND type_of_task IS ?;''', (controller, num, type,))
     conn.commit()
 
+
+def update_notify_in_users(user_id: str, val: int):
+    cur.execute(f'''UPDATE users SET notify = ?  WHERE user_id IS ?;''', (val, user_id,))
+    conn.commit()
 
 # Checkers
 def check_user_in_users(user_id):
@@ -132,7 +136,6 @@ def get_free_numbers_and_text(table: str, type: int):
     return buff
 
 
-
 def get_controlers_in_controlers(user_id: str):
     cur.execute('''SELECT subject FROM controlers WHERE user_id=?;''', (user_id,))
     buff = cur.fetchall()
@@ -140,6 +143,16 @@ def get_controlers_in_controlers(user_id: str):
     for item in buff:
         controlers.append(item[0])
     return controlers
+
+
+def get_users_in_controlers(subject: str):
+    cur.execute('''SELECT user_id FROM controlers WHERE subject IS ?;''', (subject,))
+    buff = cur.fetchall()
+    controlers = []
+    for item in buff:
+        controlers.append(item[0])
+    return controlers
+
 
 def get_now_task(table: str, user_id: str):
     cur.execute(f'''SELECT num_of_task, type_of_task, text FROM {table} WHERE user_id IS ? AND status IS ?;''', (user_id, 'in process',))
@@ -181,6 +194,13 @@ def get_user_id_in_task(table: str, num: int, type: int):
     cur.execute(f'''SELECT user_id FROM {table} WHERE num_of_task IS ? AND type_of_task IS ?;''', (num, type,))
     user_id = cur.fetchone()[0]
     return user_id
+
+
+def get_notify_in_users(user_id: str):
+    cur.execute(f'''SELECT notify FROM users WHERE user_id=?;''', (user_id,))
+    notify = cur.fetchone()[0]
+    return notify
+
 
 # Statistics
 def inc_do(user_id: str):

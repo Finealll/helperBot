@@ -49,15 +49,24 @@ def get_subjects_keyboard():
 
 def get_subjects_types_keyboard(type1, type2, type3):
     buttons = []
+    count = 0
     if type1 is not None:
-        buttons.append(kg.Button.text(label='Оценка знаний', payload=payloads.payloads[type1]))
+        buttons.append([])
+        buttons[count].append(kg.Button.text(label='Оценка знаний', payload=payloads.payloads[type1]))
+        count += 1
     if type2 is not None:
-        buttons.append(kg.Button.text(label='Оценка умений', payload=payloads.payloads[type2]))
+        buttons.append([])
+        buttons[count].append(kg.Button.text(label='Оценка умений', payload=payloads.payloads[type2]))
+        count += 1
     if type3 is not None:
-        buttons.append(kg.Button.text(label='Задачи', payload=payloads.payloads[type3]))
-    buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
+        buttons.append([])
+        buttons[count].append(kg.Button.text(label='Задачи', payload=payloads.payloads[type3]))
+        count += 1
+    buttons.append([])
+    buttons[count].append(kg.Button.text(label='Назад', payload=payloads.payloads['get_tasks_list']))
+    buttons[count].append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
     generator = kg.KeyBoard()
-    generator.load(buttons)
+    generator.extra_load(buttons)
     kb = generator.get()
     return kb
 
@@ -85,7 +94,9 @@ def get_free_numbers_keyboard(subject, free_numbers, type):
     payload['type_task'] = type
     payload['subject'] = subject
     buttons[j+1].append(kg.Button.text(label='Взять случайное задание', payload=payload))
+    buttons[j+2].append(kg.Button.text(label='К предметам', payload=payloads.payloads['get_tasks_list']))
     buttons[j+2].append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
+
     generator = kg.KeyBoard()
     generator.extra_load(buttons)
     kb = generator.get()
@@ -142,6 +153,25 @@ def get_quality_number_keyboard(subject, num, type):
     generator.load(buttons)
     kb = generator.get()
     return kb
+
+# Отправка клавиатуры профиля
+def get_profile_keyboard(val):
+    buttons = []
+    payload = dict(payloads.payloads['change_notify'])
+    if val == 1:
+        payload['val'] = 0
+        buttons.append(kg.Button.text(label="Выключить уведомления", color='negative', payload=payload))
+    else:
+        payload['val'] = 1
+        buttons.append(kg.Button.text(label="Включить уведомления", color='positive', payload=payload))
+    buttons.append(kg.Button.text(label='На главную', payload=payloads.payloads['get_main_keyboard']))
+    generator = kg.KeyBoard()
+    generator.load(buttons)
+    kb = generator.get()
+    return kb
+
+
+
 
 
 

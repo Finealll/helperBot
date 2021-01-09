@@ -192,4 +192,10 @@ payloads = {
         "subject": "",
         "type_task": 0,
     },
+    #Смена уведомлений
+    "change_notify": {
+        "type": "change_info",
+        "name": "change_notify",
+        "val": 0
+    },
 }

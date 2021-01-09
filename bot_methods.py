@@ -100,8 +100,11 @@ def add_random_number(user_id, token, payload):
     free_numbers1 = db_work.get_free_numbers_and_text(table_name, payload['type_task'])
     if len(free_numbers1) == 0:
         vkAPI.send_message(user_id, token, "Задания по этому предмету закончились!", keyboard=keyboards.get_main_keyboard(user_id))
-    index = random.randint(1, len(free_numbers1))
-    index -= 1
+    elif len(free_numbers1) == 1:
+        index = 0
+    else:
+        index = random.randint(1, len(free_numbers1))
+        index -= 1
 
     if db_work.check_is_added_task(table_name, free_numbers1[index][0], payload['type_task']):
         add_random_number(user_id, token, payload)
@@ -122,11 +125,12 @@ def delete_task(user_id, token, payload):
     table_name = names.subject_to_table[payload['subject']]
     if db_work.check_is_added_task_by_user(table_name, payload['number'], payload['type_task'], user_id):
         db_work.update_status(table_name, payload['number'], payload['type_task'], '-', 'not complete')
-
+#Удаление ответа
         answer = db_work.get_answer(table_name, payload['number'], payload['type_task'])
         if answer != '-':
             doc_id = int(answer.split('_')[1])
-            vkAPI.delete_dock(VKsettings.user_token, -names.id_community, doc_id)
+            vkAPI.delete_dock(-names.id_community, doc_id)
+            db_work.update_answer(table_name, payload['number'], payload['type_task'])
 
         vkAPI.send_message(user_id, token, 'Задание успешно отвязано!', keyboard=keyboards.get_main_keyboard(user_id))
         db_work.inc_refuse(user_id)
@@ -178,7 +182,7 @@ def get_now_task(user_id, token):
 
 def get_faq(user_id, token):
     add_new_user(user_id, token)
-    vkAPI.send_message(user_id, token, names.faq)
+    vkAPI.send_message(user_id, token, names.faq, keyboard=keyboards.get_main_keyboard(user_id))
 
 
 def check_dialog(user_id, token):
@@ -212,11 +216,12 @@ def write_attachment(user_id, token, attachment):
         os.remove(name)
 
         response = vkAPI.api.docs.save(access_token=VKsettings.token, file=filestr)
-
+        #Удаление ответа
         answer = db_work.get_answer(_table, info[0], info[1])
         if answer != '-':
             doc_id = int(answer.split('_')[1])
-            vkAPI.delete_dock(VKsettings.user_token, -names.id_community, doc_id)
+            vkAPI.delete_dock(-names.id_community, doc_id)
+            db_work.update_answer(_table, info[0], info[1])
 
         answer = 'doc'+str(response['doc']['owner_id']) + '_' + str(response['doc']['id'])
         db_work.update_answer(_table, info[0], info[1], answer)
@@ -232,12 +237,40 @@ def write_attachment(user_id, token, attachment):
                 db_work.update_score(_table, info[0], info[1], 2)
                 db_work.update_controler_from_task(_table, info[0], info[1], user_id)
 
+                doc_id = int(answer.split('_')[1])
+                title = name[:-5]
+                tags = 'Verified,'+_table.capitalize()+'Verified'
+                vkAPI.add_tag_dock(-names.id_community, doc_id, title, tags)
+        else:
+            send_notify(names.table_to_subject[_table], token)
+
+
+
 
         check_returned(user_id, token)
         go_home(user_id, token)
 
     else:
         vkAPI.send_message(user_id, token, 'Файл не распознан!', keyboard=keyboards.get_main_keyboard(user_id))
+
+
+
+def send_notify(subject, token):
+    users = db_work.get_users_in_controlers(subject)
+    for user_id in users:
+        notify = db_work.get_notify_in_users(user_id)
+        if notify == 1:
+            is_dialog = False
+            for table in names.table_name:
+                if db_work.check_is_exist_status(table, user_id, 'loading'):
+                    is_dialog = True
+                    break
+            if is_dialog:
+                vkAPI.send_message(user_id, token, 'На проверку пришло новое задание!')
+            else:
+                vkAPI.send_message(user_id, token, 'На проверку пришло новое задание!', keyboard=keyboards.get_main_keyboard(user_id))
+
+
 
 # def send_file(user_id, token, payload):
 #     table_name = names.subject_to_table[payload['subject']]
@@ -263,7 +296,7 @@ def check_returned(user_id, token):
             info = db_work.get_info_by_status(table, user_id, 'returned')
             db_work.update_status(table, info[0], info[1], user_id, 'in process')
             answer = db_work.get_answer(table, info[0], info[1])
-            db_work.update_answer(table, info[0], info[1])
+            #db_work.update_answer(table, info[0], info[1])
             controler = vkAPI.get_user_info(db_work.get_controler_from_task(table, info[0], info[1]), token)
 
             if info[1] == 3:
@@ -301,12 +334,23 @@ def get_tasks(user_id, token, payload):
 
 def get_profile(user_id, token):
     add_new_user(user_id, token)
+    keyboard = None
     user_info = db_work.get_user_info(user_id)
     subject_controler = db_work.get_controler_info(user_id)
     message = f'{user_info[1]} {user_info[2]}\nВсего выполнено заданий: {user_info[3]}'
     if subject_controler is not None:
         message += f"\nЭксперт в предмете {subject_controler}\nВсего проверил заданий: {user_info[5]}"
-    vkAPI.send_message(user_id, token, message)
+        notify = db_work.get_notify_in_users(user_id)
+        if notify == 1:
+            keyboard = keyboards.get_profile_keyboard(1)
+        else:
+            keyboard = keyboards.get_profile_keyboard(0)
+
+    if keyboard is not None:
+        vkAPI.send_message(user_id, token, message, keyboard=keyboard)
+    else:
+        vkAPI.send_message(user_id, token, message)
+
 
 
 def get_quality_num(user_id, token, payload):
@@ -348,21 +392,43 @@ def change_quality_score(user_id, token, payload):
             if db_work.check_is_exist_status(_table, user, 'in process') or db_work.check_is_exist_status(_table, user, 'loading'):
                 info = vkAPI.get_user_info(user_id, token)
                 message = f"Привет!\nТвое задание {payload['subject']}. {get_type_question(payload['type_task'])} №{payload['num']}\n" \
-                          f"было отклонено экспертом и добавлено тебе в очередь!" \
+                          f"было отклонено экспертом и добавлено тебе в очередь!\n" \
                           f"Проверяющий: {info[1]} {info[0]}"
                 vkAPI.send_message(user, token, message)
                 buff = False
                 break
         if buff:
             check_returned(user, token)
+    elif payload['score'] == 2:
+        table = names.subject_to_table[payload['subject']]
+        answer = db_work.get_answer(table, payload['num'], payload['type_task'])
+        doc_id = int(answer.split('_')[1])
+        title = f'{payload["subject"]} {get_type_question(payload["type_task"])} {payload["num"]}'
+        tags = 'Verified,'+table.capitalize()+'Verified'
+        vkAPI.add_tag_dock(-names.id_community, doc_id, title, tags)
+
+
     vkAPI.send_message(user_id, token, 'Спасибо за вашу оценку!', keyboard=keyboards.get_main_keyboard(user_id))
     db_work.inc_control(user_id)
-
-
-
-
 
 
 def on_main_from_quality(user_id, token, payload):
     db_work.update_score(names.subject_to_table[payload['subject']], payload['num'], payload['type_task'], 0)
     go_home(user_id, token)
+
+
+def change_notify(user_id, token, payload):
+    notify = payload['val']
+    db_work.update_notify_in_users(user_id, notify)
+    if notify == 1:
+        vkAPI.send_message(user_id, token, 'Уведомления включены!', keyboard=keyboards.get_profile_keyboard(notify))
+    else:
+        vkAPI.send_message(user_id, token, 'Уведомления выключены!', keyboard=keyboards.get_profile_keyboard(notify))
+
+
+def send_go_to_hell(user_id, token, name):
+    result = ''
+    for item in names.countries:
+        result = result + item + f' {name}!\n'
+    vkAPI.send_message(user_id, token, result)
+
