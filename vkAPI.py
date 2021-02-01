@@ -3,7 +3,7 @@ import vk, random
 session = vk.Session()
 api = vk.API(session, v='5.120')
 #user session
-session1 = vk.AuthSession(7721679, '89208722676', "fineall64810782002", 'docs')
+session1 = vk.AuthSession(7721679, 'логин', "пароль", 'docs')
 api1 = vk.API(session1, v='5.120')
 
 
